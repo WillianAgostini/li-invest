@@ -2,7 +2,7 @@ import { Injectable, Logger, Scope } from '@nestjs/common';
 import { Page } from 'puppeteer';
 import { NewSimulateDto } from 'src/simulation/dto/new-simulate-dto';
 import { BrowserService } from './browser/browser.service';
-import { StorageService } from './storage/storage.service';
+import { Fees, StorageService } from './storage/storage.service';
 import { UrlService } from './url/url.service';
 
 @Injectable({
@@ -21,12 +21,21 @@ export class CrawlerService {
   async getCurrentFees() {
     this.logger.debug('getCurrentFees init');
 
-    const page = await this.getPage(this.url);
-    const fees = await this.getFees(page);
+    let fees = this.storageService.getFees();
+    if (!fees) {
+      fees = await this.getFeesOnline();
+    }
 
-    await page.close();
     this.logger.debug('getCurrentFees finish');
     return fees;
+  }
+
+  private async getFeesOnline() {
+    const page = await this.getPage(this.url);
+    const localFees = await this.getFees(page);
+    this.storageService.updateFees(localFees);
+    await page.close();
+    return this.storageService.getFees();
   }
 
   async simulate(newSimulateDto: NewSimulateDto) {
@@ -120,7 +129,7 @@ export class CrawlerService {
       rentabFundoDi,
       rentabLciLca,
       taxaPoupanca,
-    };
+    } as Fees;
   }
 
   private async getPage(url: string): Promise<Page> {
@@ -161,7 +170,7 @@ export class CrawlerService {
       }
     });
     await page.goto(url, { waitUntil: 'domcontentloaded' });
-    this.storageService.update(cache);
+    this.storageService.updateCache(cache);
     await page.setViewport({ width: 1080, height: 1024 });
     return page;
   }
