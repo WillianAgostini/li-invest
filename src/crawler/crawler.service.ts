@@ -120,7 +120,7 @@ export class CrawlerService {
     await page.setRequestInterception(true);
     page.on('request', async (request) => {
       const requestUrl = request.url();
-      const content = this.urlService.shouldIgnore(requestUrl) && cache[requestUrl];
+      const content = this.urlService.shouldIgnore(requestUrl) && cache.get(requestUrl);
       if (content) {
         try {
           await request.respond(content);
@@ -136,14 +136,14 @@ export class CrawlerService {
 
     page.on('response', async (response) => {
       const responseUrl = response.url();
-      if (this.urlService.shouldIgnore(responseUrl) && !cache[responseUrl]) {
+      if (this.urlService.shouldIgnore(responseUrl) && !cache.get(responseUrl)) {
         try {
           const buffer = await response.buffer();
-          cache[responseUrl] = {
+          cache.set(responseUrl, {
             status: response.status(),
             headers: response.headers(),
             body: buffer,
-          };
+          });
         } catch (error) {
           // some responses do not contain buffer and do not need to be caught
           return;
