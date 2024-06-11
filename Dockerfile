@@ -4,7 +4,7 @@ FROM node:lts-alpine AS builder
 USER node
 WORKDIR /home/node
  
-COPY package*.json .
+COPY package*.json ./
 RUN npm ci
  
 COPY --chown=node:node . .
