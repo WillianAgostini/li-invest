@@ -9,7 +9,10 @@ export class BrowserService {
 
   async newPage(): Promise<Page> {
     if (!this.browser) {
-      this.browser = await puppeteer.launch({ headless: 'shell' });
+      this.browser = await puppeteer.launch({
+        headless: 'shell',
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+      });
       // this.browser = await puppeteer.launch({ headless: false });
     }
     return await this.browser.newPage();
