@@ -10,6 +10,7 @@ import { UrlService } from './url/url.service';
 })
 export class CrawlerService {
   private readonly logger = new Logger(CrawlerService.name);
+  private readonly url = 'https://infograficos.valor.globo.com/calculadoras/calculadora-de-renda-fixa.html#ancor';
 
   constructor(
     private storageService: StorageService,
@@ -17,12 +18,21 @@ export class CrawlerService {
     private browserService: BrowserService,
   ) {}
 
+  async getCurrentFees() {
+    this.logger.debug('getCurrentFees init');
+
+    const page = await this.getPage(this.url);
+    const fees = await this.getFees(page);
+
+    await page.close();
+    this.logger.debug('getCurrentFees finish');
+    return fees;
+  }
+
   async simulate(newSimulateDto: NewSimulateDto) {
-    this.logger.debug('init');
+    this.logger.debug('simulate init');
 
-    const url = 'https://infograficos.valor.globo.com/calculadoras/calculadora-de-renda-fixa.html#ancor';
-
-    const page = await this.getPage(url);
+    const page = await this.getPage(this.url);
 
     await page.evaluate(() => {
       document.getElementById('investimento_inicial').removeAttribute('disabled');
@@ -76,7 +86,7 @@ export class CrawlerService {
     jsonResult.attributes = await this.getFees(page);
 
     await page.close();
-    this.logger.debug('finish');
+    this.logger.debug('simulate finish');
     return jsonResult;
   }
 

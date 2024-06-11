@@ -8,6 +8,10 @@ export class SimulationService {
 
   constructor(private crawlerService: CrawlerService) {}
 
+  async getFees() {
+    return await this.crawlerService.getCurrentFees();
+  }
+
   async simulate(newSimulateDto: NewSimulateDto) {
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
