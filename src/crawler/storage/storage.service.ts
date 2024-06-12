@@ -1,25 +1,33 @@
 import { Injectable, Scope } from '@nestjs/common';
 
+export interface DetailedValues {
+  value: string;
+  updatedAt?: string;
+  description: string;
+}
+
 export interface OnlineFees {
-  ipca: string;
-  ipcaUdatedAt: string;
-  cdi: string;
-  cdiUdatedAt: string;
-  selic: string;
-  selicUdatedAt: string;
-  poupanca: string;
-  poupancaUdatedAt: string;
+  tr: DetailedValues;
+  ipca: DetailedValues;
+  cdi: DetailedValues;
+  selic: DetailedValues;
+  poupanca: DetailedValues;
 }
 
 export interface OflineFees {
-  tr: string;
-  tesouroPre: string;
-  custodia: string;
-  tesouroIpca: string;
-  admFundoDi: string;
-  rentabCdb: string;
-  rentabFundoDi: string;
-  rentabLciLca: string;
+  taxa: {
+    custodia: DetailedValues;
+    admFundoDi: DetailedValues;
+  };
+  juro: {
+    tesouroPre: DetailedValues;
+    tesouroIpca: DetailedValues;
+  };
+  rentabilidade: {
+    cdb: DetailedValues;
+    fundoDi: DetailedValues;
+    lciLca: DetailedValues;
+  };
 }
 
 export interface Fees extends OnlineFees, OflineFees {}

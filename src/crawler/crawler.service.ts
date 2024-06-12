@@ -95,8 +95,7 @@ export class CrawlerService {
   }
 
   private async getFees(page: Page) {
-    const [tr, tesouroPre, custodia, tesouroIpca, admFundoDi, rentabCdb, rentabFundoDi, rentabLciLca] = await Promise.all([
-      page.$eval('#tr', (el) => el.getAttribute('data-default')),
+    const [tesouroPre, custodia, tesouroIpca, admFundoDi, rentabCdb, rentabFundoDi, rentabLciLca] = await Promise.all([
       page.$eval('#tesouro_pre', (el) => el.getAttribute('data-default')),
       page.$eval('#taxa_custodia', (el) => el.getAttribute('data-default')),
       page.$eval('#tesouro_ipca', (el) => el.getAttribute('data-default')),
@@ -107,14 +106,40 @@ export class CrawlerService {
     ]);
 
     return {
-      tr,
-      tesouroPre,
-      custodia,
-      tesouroIpca,
-      admFundoDi,
-      rentabCdb,
-      rentabFundoDi,
-      rentabLciLca,
+      taxa: {
+        custodia: {
+          value: custodia,
+          description: 'Taxa de custódia da B3 no Tesouro Direto (a.a.) %',
+        },
+        admFundoDi: {
+          value: admFundoDi,
+          description: 'Taxa de administração do Fundo DI (a.a.) %',
+        },
+      },
+      juro: {
+        tesouroPre: {
+          description: 'Juro nominal do Tesouro Prefixado (a.a.) %',
+          value: tesouroPre,
+        },
+        tesouroIpca: {
+          value: tesouroIpca,
+          description: 'Juro real do Tesouro IPCA+ (a.a.) %',
+        },
+      },
+      rentabilidade: {
+        cdb: {
+          value: rentabCdb,
+          description: 'Rentabilidade do CDB (% do CDI)',
+        },
+        fundoDi: {
+          value: rentabFundoDi,
+          description: 'Rentabilidade do Fundo DI (% do CDI)',
+        },
+        lciLca: {
+          value: rentabLciLca,
+          description: 'Rentabilidade da LCI/LCA (% do CDI)',
+        },
+      },
     } as OflineFees;
   }
 }

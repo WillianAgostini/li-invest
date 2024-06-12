@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
-import { OnlineFees } from '../storage/storage.service';
+import { DetailedValues, OnlineFees } from '../storage/storage.service';
 
 @Injectable()
 export class FeeService {
@@ -10,17 +10,15 @@ export class FeeService {
   async getAll() {
     const cdi = await this.getCdi();
     const ipca = await this.getIpca();
-    const selic = await this.getSelic();
+    const selic = await this.getSelicMeta();
     const poupanca = await this.getPoupanca();
+    const tr = await this.getTr();
     return {
-      cdi: cdi.value,
-      cdiUdatedAt: cdi.updatedAt,
-      ipca: ipca.value,
-      ipcaUdatedAt: ipca.updatedAt,
-      selic: selic.value,
-      selicUdatedAt: selic.updatedAt,
-      poupanca: poupanca.value,
-      poupancaUdatedAt: poupanca.updatedAt,
+      cdi,
+      ipca,
+      selic,
+      poupanca,
+      tr,
     } as OnlineFees;
   }
 
@@ -31,10 +29,11 @@ export class FeeService {
     return {
       value,
       updatedAt,
-    };
+      description: 'Rentabilidade da Poupança (a.m.) %',
+    } as DetailedValues;
   }
 
-  async getSelic() {
+  async getSelicOver() {
     const { data } = await firstValueFrom(this.httpService.get('https://api.bcb.gov.br/dados/serie/bcdata.sgs.1178/dados/ultimos/1?formato=json'));
     const value = data[0].valor;
     const updatedAt = data[0].data;
@@ -44,6 +43,19 @@ export class FeeService {
     };
   }
 
+  async getSelicMeta() {
+    const { data } = await firstValueFrom(this.httpService.get('https://www.bcb.gov.br/api/servico/sitebcb/historicotaxasjuros'));
+    const value = data.conteudo[0].MetaSelic;
+    const today = new Date();
+    const updatedAt = `${today.getDay()}/${today.getMonth()}/${today.getFullYear()}`;
+
+    return {
+      value,
+      updatedAt,
+      description: 'SELIC meta (a.a.) %',
+    } as DetailedValues;
+  }
+
   async getCdi() {
     const { data } = await firstValueFrom(this.httpService.get('https://api.bcb.gov.br/dados/serie/bcdata.sgs.4389/dados/ultimos/1?formato=json'));
     const value = data[0].valor;
@@ -51,7 +63,8 @@ export class FeeService {
     return {
       value,
       updatedAt,
-    };
+      description: 'CDI (a.a.) %',
+    } as DetailedValues;
   }
 
   async getIpca() {
@@ -65,6 +78,18 @@ export class FeeService {
     return {
       value,
       updatedAt,
-    };
+      description: 'IPCA (a.a.) %',
+    } as DetailedValues;
+  }
+
+  async getTr() {
+    const { data } = await firstValueFrom(this.httpService.get('https://api.bcb.gov.br/dados/serie/bcdata.sgs.226/dados/ultimos/1?formato=json'));
+    const value = data[0].valor;
+    const updatedAt = data[0].data;
+    return {
+      value,
+      updatedAt,
+      description: 'Taxa Referencial (a.m.) %',
+    } as DetailedValues;
   }
 }
