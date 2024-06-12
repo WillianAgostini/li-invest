@@ -47,7 +47,7 @@ export class FeeService {
     const { data } = await firstValueFrom(this.httpService.get('https://www.bcb.gov.br/api/servico/sitebcb/historicotaxasjuros'));
     const value = data.conteudo[0].MetaSelic;
     const today = new Date();
-    const updatedAt = `${today.getDay()}/${today.getMonth()}/${today.getFullYear()}`;
+    const updatedAt = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
 
     return {
       value,
