@@ -45,12 +45,6 @@ export class CrawlerService {
     const tab = await this.tabService.getFreeTab();
 
     try {
-      await tab.page.evaluate(() => {
-        document.getElementById('investimento_inicial').removeAttribute('disabled');
-        document.getElementById('aporte_iniciais').removeAttribute('disabled');
-        document.getElementById('periodo').removeAttribute('disabled');
-      });
-
       await tab.page.type('#investimento_inicial', newSimulateDto.initialValue);
       await tab.page.type('#aporte_iniciais', newSimulateDto.monthlyValue);
       await tab.page.type('#periodo', newSimulateDto.period);
