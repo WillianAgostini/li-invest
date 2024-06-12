@@ -90,7 +90,7 @@ export class TabService {
   }
 
   async getFreeTab(): Promise<{ id: string; page: Page }> {
-    let freeTab = this.tabs.find((tab) => !tab.inUse);
+    let freeTab = this.findFreeTab();
     if (freeTab) {
       freeTab.inUse = true;
       return { id: freeTab.id, page: freeTab.page };
@@ -104,9 +104,21 @@ export class TabService {
       return { id, page };
     }
 
-    freeTab = { id, page, inUse: true, destroyOnRelease: true };
-    this.tabs.push(freeTab);
-    return { id, page };
+    return new Promise((resolve) => {
+      const interval = setInterval(() => {
+        this.logger.debug('waiting free tab');
+        const freeTab = this.findFreeTab();
+        if (freeTab) {
+          freeTab.inUse = true;
+          clearInterval(interval);
+          resolve({ id: freeTab.id, page: freeTab.page });
+        }
+      }, 100);
+    });
+  }
+
+  private findFreeTab() {
+    return this.tabs.find((tab) => !tab.inUse);
   }
 
   async releaseTab(tabId: string): Promise<void> {
