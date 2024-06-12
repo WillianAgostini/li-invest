@@ -19,9 +19,7 @@ export class TabService {
   constructor(
     private storageService: StorageService,
     private urlService: UrlService,
-  ) {
-    this.getBrowser().then(() => this.logger.debug('init browser'));
-  }
+  ) {}
 
   private async getBrowser(): Promise<Browser> {
     if (!this.browser) {

@@ -1,19 +1,28 @@
 import { Injectable, Scope } from '@nestjs/common';
 
-export interface Fees {
-  taxaSelic: string;
-  taxaCdi: string;
+export interface OnlineFees {
   ipca: string;
+  ipcaUdatedAt: string;
+  cdi: string;
+  cdiUdatedAt: string;
+  selic: string;
+  selicUdatedAt: string;
+  poupanca: string;
+  poupancaUdatedAt: string;
+}
+
+export interface OflineFees {
   tr: string;
   tesouroPre: string;
-  taxaCustodia: string;
+  custodia: string;
   tesouroIpca: string;
-  taxaAdmFundoDi: string;
+  admFundoDi: string;
   rentabCdb: string;
   rentabFundoDi: string;
   rentabLciLca: string;
-  taxaPoupanca: string;
 }
+
+export interface Fees extends OnlineFees, OflineFees {}
 
 export interface Cache {
   body: Buffer;
@@ -26,7 +35,7 @@ export interface Cache {
 })
 export class StorageService {
   private cache = new Map<string, Cache>();
-  private fees: Fees;
+  private fees?: OflineFees;
 
   getCache() {
     return this.cache;
@@ -40,7 +49,11 @@ export class StorageService {
     return this.fees;
   }
 
-  updateFees(fees: Fees) {
+  updateFees(fees: OflineFees) {
+    const hasUndefinedValues = Object.values(fees).some((x) => x == null || x == undefined);
+    if (hasUndefinedValues) {
+      fees = undefined;
+    }
     this.fees = fees;
   }
 }

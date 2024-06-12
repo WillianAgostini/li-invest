@@ -2,11 +2,9 @@ import { Injectable, Logger, Scope } from '@nestjs/common';
 import { Page } from 'puppeteer';
 import { NewSimulateDto } from 'src/simulation/dto/new-simulate-dto';
 import { TabService } from './tab/tab.service';
-import { Fees, StorageService } from './storage/storage.service';
-
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+import { OflineFees, StorageService } from './storage/storage.service';
+import { delay } from 'src/utils/time';
+import { FeeService } from './fee/fee.service';
 
 @Injectable({
   scope: Scope.DEFAULT,
@@ -17,6 +15,7 @@ export class CrawlerService {
   constructor(
     private storageService: StorageService,
     private tabService: TabService,
+    private feeService: FeeService,
   ) {}
 
   async getCurrentFees() {
@@ -33,8 +32,8 @@ export class CrawlerService {
 
   private async getFeesOnline() {
     const tab = await this.tabService.getFreeTab();
-    const localFees = await this.getFees(tab.page);
-    this.storageService.updateFees(localFees);
+    const [onlineFees, pageFees] = await Promise.all([this.feeService.getAll(), this.getFees(tab.page)]);
+    this.storageService.updateFees({ ...pageFees, ...onlineFees });
     await this.tabService.releaseTab(tab.id);
     return this.storageService.getFees();
   }
@@ -48,8 +47,6 @@ export class CrawlerService {
       await tab.page.type('#investimento_inicial', newSimulateDto.initialValue);
       await tab.page.type('#aporte_iniciais', newSimulateDto.monthlyValue);
       await tab.page.type('#periodo', newSimulateDto.period);
-
-      // await tab.page.click('.btn-calcular');
       await Promise.race([tab.page.waitForSelector('#result_cap_init'), delay(1000)]);
 
       const [resultCapInit, resultAporte, resultPeriodo, resultCapTotal, tableHeaders, tableData] = await Promise.all([
@@ -98,35 +95,26 @@ export class CrawlerService {
   }
 
   private async getFees(page: Page) {
-    const [taxaSelic, taxaCdi, ipca, tr, tesouroPre, taxaCustodia, tesouroIpca, taxaAdmFundoDi, rentabCdb, rentabFundoDi, rentabLciLca, taxaPoupanca] =
-      await Promise.all([
-        page.$eval('#taxa_selic', (el) => el.getAttribute('data-default')),
-        page.$eval('#taxa_cdi', (el) => el.getAttribute('data-default')),
-        page.$eval('#ipca', (el) => el.getAttribute('data-default')),
-        page.$eval('#tr', (el) => el.getAttribute('data-default')),
-        page.$eval('#tesouro_pre', (el) => el.getAttribute('data-default')),
-        page.$eval('#taxa_custodia', (el) => el.getAttribute('data-default')),
-        page.$eval('#tesouro_ipca', (el) => el.getAttribute('data-default')),
-        page.$eval('#taxa_adm_fundo_di', (el) => el.getAttribute('data-default')),
-        page.$eval('#rentab_cdb', (el) => el.getAttribute('data-default')),
-        page.$eval('#rentab_fundo_di', (el) => el.getAttribute('data-default')),
-        page.$eval('#rentab_lci_lca', (el) => el.getAttribute('data-default')),
-        page.$eval('#taxa_poupanca', (el) => el.getAttribute('data-default')),
-      ]);
+    const [tr, tesouroPre, custodia, tesouroIpca, admFundoDi, rentabCdb, rentabFundoDi, rentabLciLca] = await Promise.all([
+      page.$eval('#tr', (el) => el.getAttribute('data-default')),
+      page.$eval('#tesouro_pre', (el) => el.getAttribute('data-default')),
+      page.$eval('#taxa_custodia', (el) => el.getAttribute('data-default')),
+      page.$eval('#tesouro_ipca', (el) => el.getAttribute('data-default')),
+      page.$eval('#taxa_adm_fundo_di', (el) => el.getAttribute('data-default')),
+      page.$eval('#rentab_cdb', (el) => el.getAttribute('data-default')),
+      page.$eval('#rentab_fundo_di', (el) => el.getAttribute('data-default')),
+      page.$eval('#rentab_lci_lca', (el) => el.getAttribute('data-default')),
+    ]);
 
     return {
-      taxaSelic,
-      taxaCdi,
-      ipca,
       tr,
       tesouroPre,
-      taxaCustodia,
+      custodia,
       tesouroIpca,
-      taxaAdmFundoDi,
+      admFundoDi,
       rentabCdb,
       rentabFundoDi,
       rentabLciLca,
-      taxaPoupanca,
-    } as Fees;
+    } as OflineFees;
   }
 }
