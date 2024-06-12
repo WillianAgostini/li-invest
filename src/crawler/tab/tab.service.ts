@@ -25,11 +25,11 @@ export class TabService {
 
   private async getBrowser(): Promise<Browser> {
     if (!this.browser) {
-      // this.browser = await puppeteer.launch({
-      //   headless: 'shell',
-      //   executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
-      // });
-      this.browser = await puppeteer.launch({ headless: false });
+      this.browser = await puppeteer.launch({
+        headless: 'shell',
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+      });
+      // this.browser = await puppeteer.launch({ headless: false });
     }
     if (!this.browser.connected) {
       await this.browser.close();

@@ -12,7 +12,7 @@ export class CrawlerService {
 
   constructor(
     private storageService: StorageService,
-    private browserService: TabService,
+    private tabService: TabService,
   ) {}
 
   async getCurrentFees() {
@@ -28,17 +28,17 @@ export class CrawlerService {
   }
 
   private async getFeesOnline() {
-    const tab = await this.browserService.getFreeTab();
+    const tab = await this.tabService.getFreeTab();
     const localFees = await this.getFees(tab.page);
     this.storageService.updateFees(localFees);
-    await this.browserService.releaseTab(tab.id);
+    await this.tabService.releaseTab(tab.id);
     return this.storageService.getFees();
   }
 
   async simulate(newSimulateDto: NewSimulateDto) {
     this.logger.debug('simulate init');
 
-    const tab = await this.browserService.getFreeTab();
+    const tab = await this.tabService.getFreeTab();
 
     await tab.page.evaluate(() => {
       document.getElementById('investimento_inicial').removeAttribute('disabled');
@@ -90,7 +90,7 @@ export class CrawlerService {
     }
 
     jsonResult.attributes = await this.getFees(tab.page);
-    await this.browserService.releaseTab(tab.id);
+    await this.tabService.releaseTab(tab.id);
     this.logger.debug('simulate finish');
     return jsonResult;
   }
