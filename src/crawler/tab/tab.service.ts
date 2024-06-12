@@ -1,8 +1,8 @@
 import { Injectable, Logger, Scope } from '@nestjs/common';
-import puppeteer, { Browser, Page, PageEvent } from 'puppeteer';
-import { UrlService } from '../url/url.service';
-import { StorageService } from '../storage/storage.service';
 import { randomUUID } from 'node:crypto';
+import puppeteer, { Browser, Page, PageEvent } from 'puppeteer';
+import { StorageService } from '../storage/storage.service';
+import { UrlService } from '../url/url.service';
 
 @Injectable({
   scope: Scope.DEFAULT,
@@ -81,7 +81,7 @@ export class TabService {
     });
     await page.goto(this.url, { waitUntil: 'domcontentloaded' });
     this.storageService.updateCache(cache);
-    await page.setViewport({ width: 1080, height: 1024 });
+    await page.setViewport({ width: 1440, height: 766 });
     page.off(PageEvent.Request, requestInterceptor);
     page.on(PageEvent.Request, async (request) => {
       request.abort();
@@ -96,22 +96,33 @@ export class TabService {
       return { id: freeTab.id, page: freeTab.page };
     }
 
-    const page = await this.newPage();
-    const id = randomUUID();
     if (this.tabs.length < this.maxTabs) {
-      freeTab = { id, page, inUse: true, destroyOnRelease: false };
+      const id = randomUUID();
+      freeTab = { id, page: undefined, inUse: true, destroyOnRelease: false };
       this.tabs.push(freeTab);
+      const page = await this.newPage();
+      freeTab.page = page;
       return { id, page };
     }
 
-    return new Promise((resolve) => {
-      const interval = setInterval(() => {
+    let attemps = 0;
+    return new Promise((resolve, reject) => {
+      const logInterval = setInterval(() => {
         this.logger.debug('waiting free tab');
+      }, 3000);
+      const interval = setInterval(() => {
         const freeTab = this.findFreeTab();
         if (freeTab) {
           freeTab.inUse = true;
           clearInterval(interval);
+          clearInterval(logInterval);
           resolve({ id: freeTab.id, page: freeTab.page });
+        }
+
+        if (attemps++ > 15_000) {
+          clearInterval(interval);
+          clearInterval(logInterval);
+          reject('Not found free tab');
         }
       }, 100);
     });

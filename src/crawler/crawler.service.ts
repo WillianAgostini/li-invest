@@ -4,6 +4,10 @@ import { NewSimulateDto } from 'src/simulation/dto/new-simulate-dto';
 import { TabService } from './tab/tab.service';
 import { Fees, StorageService } from './storage/storage.service';
 
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 @Injectable({
   scope: Scope.DEFAULT,
 })
@@ -40,59 +44,63 @@ export class CrawlerService {
 
     const tab = await this.tabService.getFreeTab();
 
-    await tab.page.evaluate(() => {
-      document.getElementById('investimento_inicial').removeAttribute('disabled');
-      document.getElementById('aporte_iniciais').removeAttribute('disabled');
-      document.getElementById('periodo').removeAttribute('disabled');
-    });
+    try {
+      await tab.page.evaluate(() => {
+        document.getElementById('investimento_inicial').removeAttribute('disabled');
+        document.getElementById('aporte_iniciais').removeAttribute('disabled');
+        document.getElementById('periodo').removeAttribute('disabled');
+      });
 
-    await tab.page.type('#investimento_inicial', newSimulateDto.initialValue);
-    await tab.page.type('#aporte_iniciais', newSimulateDto.monthlyValue);
-    await tab.page.type('#periodo', newSimulateDto.period);
+      await tab.page.type('#investimento_inicial', newSimulateDto.initialValue);
+      await tab.page.type('#aporte_iniciais', newSimulateDto.monthlyValue);
+      await tab.page.type('#periodo', newSimulateDto.period);
 
-    await tab.page.click('.btn-calcular');
+      // await tab.page.click('.btn-calcular');
+      await Promise.race([tab.page.waitForSelector('#result_cap_init'), delay(1000)]);
 
-    await tab.page.waitForSelector('#result_cap_init');
+      const [resultCapInit, resultAporte, resultPeriodo, resultCapTotal, tableHeaders, tableData] = await Promise.all([
+        tab.page.$eval('#result_cap_init', (el) => el.textContent.trim()),
+        tab.page.$eval('#result_aporte', (el) => el.textContent.trim()),
+        tab.page.$eval('#result_periodo', (el) => el.textContent.trim()),
+        tab.page.$eval('#result_cap_total', (el) => el.textContent.trim()),
+        tab.page.$$eval('.tabela thead th', (headers) => headers.map((th) => th.textContent.trim())),
+        tab.page.$$eval('.tabela tbody tr', (rows) =>
+          Array.from(rows, (row) => {
+            const columns = row.querySelectorAll('td');
+            return Array.from(columns, (column) => column.textContent.trim());
+          }),
+        ),
+      ]);
 
-    const [resultCapInit, resultAporte, resultPeriodo, resultCapTotal, tableHeaders, tableData] = await Promise.all([
-      tab.page.$eval('#result_cap_init', (el) => el.textContent.trim()),
-      tab.page.$eval('#result_aporte', (el) => el.textContent.trim()),
-      tab.page.$eval('#result_periodo', (el) => el.textContent.trim()),
-      tab.page.$eval('#result_cap_total', (el) => el.textContent.trim()),
-      tab.page.$$eval('.tabela thead th', (headers) => headers.map((th) => th.textContent.trim())),
-      tab.page.$$eval('.tabela tbody tr', (rows) =>
-        Array.from(rows, (row) => {
-          const columns = row.querySelectorAll('td');
-          return Array.from(columns, (column) => column.textContent.trim());
-        }),
-      ),
-    ]);
-
-    const jsonResult = {
-      initialInvestedValue: resultCapInit,
-      monthlyContributions: resultAporte,
-      applicationPeriod: resultPeriodo,
-      totalInvestedValue: resultCapTotal,
-      results: {},
-      attributes: {},
-    };
-
-    for (let i = 1; i < 8; i++) {
-      jsonResult.results[tableHeaders[i]] = {
-        accumulatedGrossValue: tableData[0][i],
-        grossProfitability: tableData[1][i],
-        costs: tableData[2][i],
-        taxesPaid: tableData[3][i],
-        accumulatedNetValue: tableData[4][i],
-        netProfitability: tableData[5][i],
-        netGain: tableData[6][i],
+      const jsonResult = {
+        initialInvestedValue: resultCapInit,
+        monthlyContributions: resultAporte,
+        applicationPeriod: resultPeriodo,
+        totalInvestedValue: resultCapTotal,
+        results: {},
+        attributes: {},
       };
-    }
 
-    jsonResult.attributes = await this.getFees(tab.page);
-    await this.tabService.releaseTab(tab.id);
-    this.logger.debug('simulate finish');
-    return jsonResult;
+      for (let i = 1; i < 8; i++) {
+        jsonResult.results[tableHeaders[i]] = {
+          accumulatedGrossValue: tableData[0][i],
+          grossProfitability: tableData[1][i],
+          costs: tableData[2][i],
+          taxesPaid: tableData[3][i],
+          accumulatedNetValue: tableData[4][i],
+          netProfitability: tableData[5][i],
+          netGain: tableData[6][i],
+        };
+      }
+
+      jsonResult.attributes = await this.getFees(tab.page);
+      return jsonResult;
+    } catch (error) {
+      this.logger.error(error);
+    } finally {
+      await this.tabService.releaseTab(tab.id);
+      this.logger.debug('simulate finish');
+    }
   }
 
   private async getFees(page: Page) {
