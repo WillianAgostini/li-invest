@@ -36,6 +36,7 @@ export class TabService {
   }
 
   private async newPage(): Promise<Page> {
+    this.logger.debug(`+1 newPage of ${this.tabs.length}`);
     const browser = await this.getBrowser();
     const page = await browser.newPage();
     await page.setViewport({ width: 1920, height: 1080 });
@@ -106,6 +107,8 @@ export class TabService {
   }
 
   async destroyTab(tabId: string): Promise<void> {
+    this.logger.debug(`destroyTab of ${this.tabs.length}`);
+
     const tab = this.tabs.find((tab) => tab.id === tabId);
     if (!tab.page.isClosed()) await tab?.page?.close();
     this.tabs = this.tabs.filter((tab) => tab.id !== tabId);
