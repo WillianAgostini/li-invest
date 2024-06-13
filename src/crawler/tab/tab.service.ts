@@ -1,8 +1,6 @@
 import { Injectable, Logger, Scope } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import puppeteer, { Browser, Page, PageEvent } from 'puppeteer';
-import { StorageService } from '../storage/storage.service';
-import { UrlService } from '../url/url.service';
 
 @Injectable({
   scope: Scope.DEFAULT,
@@ -14,12 +12,7 @@ export class TabService {
   private readonly maxTabs: number = parseInt(process.env.MAX_TABS) || 3;
   private tabs: { id: string; page: Page; inUse: boolean }[] = [];
 
-  private readonly url = 'https://infograficos.valor.globo.com/calculadoras/calculadora-de-renda-fixa.html#ancor';
-
-  constructor(
-    private storageService: StorageService,
-    private urlService: UrlService,
-  ) {}
+  private readonly url = 'http://localhost:5000';
 
   private async getBrowser(): Promise<Browser> {
     if (!this.browser) {
@@ -43,48 +36,12 @@ export class TabService {
   }
 
   private async newPage(): Promise<Page> {
-    const cache = this.storageService.getCache();
     const browser = await this.getBrowser();
     const page = await browser.newPage();
     await page.setViewport({ width: 1920, height: 1080 });
 
-    await page.setRequestInterception(true);
-    const requestInterceptor = async (request) => {
-      const requestUrl = request.url();
-      const content = this.urlService.shouldIgnore(requestUrl) && cache.get(requestUrl);
-      if (content) {
-        try {
-          await request.respond(content);
-        } catch (error) {
-          request.continue();
-          this.urlService.appendIgnoredUrls(requestUrl);
-        } finally {
-          return;
-        }
-      }
-      request.continue();
-    };
-    page.on(PageEvent.Request, requestInterceptor);
-
-    page.on(PageEvent.Response, async (response) => {
-      const responseUrl = response.url();
-      if (this.urlService.shouldIgnore(responseUrl) && !cache.get(responseUrl)) {
-        try {
-          const buffer = await response.buffer();
-          cache.set(responseUrl, {
-            status: response.status(),
-            headers: response.headers(),
-            body: buffer,
-          });
-        } catch (error) {
-          // some responses do not contain buffer and do not need to be caught
-          return;
-        }
-      }
-    });
     await page.goto(this.url, { waitUntil: 'domcontentloaded' });
-    this.storageService.updateCache(cache);
-    page.off(PageEvent.Request, requestInterceptor);
+    await page.setRequestInterception(true);
     page.on(PageEvent.Request, async (request) => {
       request.abort();
     });
