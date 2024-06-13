@@ -12,7 +12,7 @@ export class TabService {
 
   private browser: Browser;
   private readonly maxTabs: number = parseInt(process.env.MAX_TABS) || 3;
-  private tabs: { id: string; page: Page; inUse: boolean; destroyOnRelease: boolean }[] = [];
+  private tabs: { id: string; page: Page; inUse: boolean }[] = [];
 
   private readonly url = 'https://infograficos.valor.globo.com/calculadoras/calculadora-de-renda-fixa.html#ancor';
 
@@ -23,11 +23,15 @@ export class TabService {
 
   private async getBrowser(): Promise<Browser> {
     if (!this.browser) {
-      this.browser = await puppeteer.launch({
-        headless: 'shell',
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
-      });
-      // this.browser = await puppeteer.launch({ headless: false });
+      if (process.env.PRODUCTION == 'false') {
+        this.browser = await puppeteer.launch({ headless: false, args: ['--window-size=1920,1080'] });
+      } else {
+        this.browser = await puppeteer.launch({
+          headless: 'shell',
+          executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+          args: ['--window-size=1920,1080'],
+        });
+      }
     }
     if (!this.browser.connected) {
       await this.browser.close();
@@ -79,11 +83,17 @@ export class TabService {
     });
     await page.goto(this.url, { waitUntil: 'domcontentloaded' });
     this.storageService.updateCache(cache);
-    await page.setViewport({ width: 1440, height: 766 });
     page.off(PageEvent.Request, requestInterceptor);
     page.on(PageEvent.Request, async (request) => {
       request.abort();
     });
+
+    await page.evaluate(() => {
+      document.getElementById('investimento_inicial').removeAttribute('disabled');
+      document.getElementById('aporte_iniciais').removeAttribute('disabled');
+      document.getElementById('periodo').removeAttribute('disabled');
+    });
+
     return page;
   }
 
@@ -96,7 +106,7 @@ export class TabService {
 
     if (this.tabs.length < this.maxTabs) {
       const id = randomUUID();
-      freeTab = { id, page: undefined, inUse: true, destroyOnRelease: false };
+      freeTab = { id, page: undefined, inUse: true };
       this.tabs.push(freeTab);
       const page = await this.newPage();
       freeTab.page = page;
@@ -135,9 +145,12 @@ export class TabService {
     if (tab) {
       tab.inUse = false;
     }
-    if (tab.destroyOnRelease) {
-      await tab.page.close();
-    }
+  }
+
+  async destroyTab(tabId: string): Promise<void> {
+    const tab = this.tabs.find((tab) => tab.id === tabId);
+    if (!tab.page.isClosed()) await tab?.page?.close();
+    this.tabs = this.tabs.filter((tab) => tab.id !== tabId);
   }
 
   async close(): Promise<void> {

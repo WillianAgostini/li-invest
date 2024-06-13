@@ -1,5 +1,5 @@
 export class NewSimulateDto {
-  initialValue: string;
-  monthlyValue: string;
-  period: string;
+  initialValue: number;
+  monthlyValue: number;
+  period: number;
 }

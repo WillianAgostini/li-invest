@@ -1,10 +1,11 @@
 import { Injectable, Logger, Scope } from '@nestjs/common';
 import { Page } from 'puppeteer';
-import { NewSimulateDto } from 'src/simulation/dto/new-simulate-dto';
-import { TabService } from './tab/tab.service';
-import { OflineFees, StorageService } from './storage/storage.service';
+import { convertCurrencyStringToNumber } from 'src/utils/conveter';
 import { delay } from 'src/utils/time';
 import { FeeService } from './fee/fee.service';
+import { NewSimulate } from './interface/new-simulate';
+import { OflineFees, StorageService } from './storage/storage.service';
+import { TabService } from './tab/tab.service';
 
 @Injectable({
   scope: Scope.DEFAULT,
@@ -38,15 +39,32 @@ export class CrawlerService {
     return this.storageService.getFees();
   }
 
-  async simulate(newSimulateDto: NewSimulateDto) {
+  async simulate(newSimulate: NewSimulate) {
+    newSimulate = this.normalizeInput(newSimulate);
     this.logger.debug('simulate init');
 
     const tab = await this.tabService.getFreeTab();
 
     try {
-      await tab.page.type('#investimento_inicial', newSimulateDto.initialValue);
-      await tab.page.type('#aporte_iniciais', newSimulateDto.monthlyValue);
-      await tab.page.type('#periodo', newSimulateDto.period);
+      const $investimento_inicial = await tab.page.$('#investimento_inicial');
+      const $aporte_iniciais = await tab.page.$('#aporte_iniciais');
+      const $periodo = await tab.page.$('#periodo');
+      const $disclaimer_inputs = await tab.page.$('.disclaimer-inputs');
+
+      await $investimento_inicial.evaluate((input) => (input.textContent = ''));
+      await $aporte_iniciais.evaluate((input) => (input.textContent = ''));
+      await $periodo.evaluate((input) => (input.textContent = ''));
+      await $disclaimer_inputs.click();
+
+      await $investimento_inicial.type(newSimulate.initialValue);
+      await $aporte_iniciais.type(newSimulate.monthlyValue);
+      await $periodo.type(newSimulate.period);
+      await $disclaimer_inputs.click();
+
+      try {
+        await tab.page.click('.btn-calcular');
+      } catch {}
+
       await Promise.race([tab.page.waitForSelector('#result_cap_init'), delay(1000)]);
 
       const [resultCapInit, resultAporte, resultPeriodo, resultCapTotal, tableHeaders, tableData] = await Promise.all([
@@ -62,6 +80,19 @@ export class CrawlerService {
           }),
         ),
       ]);
+
+      if (
+        this.hasDifferentValues(
+          {
+            initialValue: resultCapInit,
+            monthlyValue: resultAporte,
+            period: resultPeriodo,
+          } as NewSimulate,
+          newSimulate,
+        )
+      ) {
+        throw new Error('has differents values');
+      }
 
       const jsonResult = {
         initialInvestedValue: resultCapInit,
@@ -85,13 +116,30 @@ export class CrawlerService {
       }
 
       jsonResult.attributes = await this.getFees(tab.page);
+      await this.tabService.releaseTab(tab.id);
       return jsonResult;
     } catch (error) {
       this.logger.error(error);
+      this.logger.debug('destroyTab');
+      await this.tabService.destroyTab(tab.id);
+      throw error;
     } finally {
-      await this.tabService.releaseTab(tab.id);
       this.logger.debug('simulate finish');
     }
+  }
+
+  normalizeInput(newSimulate: NewSimulate): NewSimulate {
+    newSimulate.initialValue = convertCurrencyStringToNumber(newSimulate.initialValue);
+    newSimulate.monthlyValue = convertCurrencyStringToNumber(newSimulate.monthlyValue);
+    return newSimulate;
+  }
+
+  hasDifferentValues(result: NewSimulate, newSimulate: NewSimulate) {
+    return (
+      convertCurrencyStringToNumber(result.initialValue) != convertCurrencyStringToNumber(newSimulate.initialValue) ||
+      convertCurrencyStringToNumber(result.monthlyValue) != convertCurrencyStringToNumber(newSimulate.monthlyValue) ||
+      result.period.replace(/\D/g, '').trim() != newSimulate.period
+    );
   }
 
   private async getFees(page: Page) {

@@ -13,11 +13,15 @@ export class SimulationService {
   }
 
   async simulate(newSimulateDto: NewSimulateDto) {
-    for (let attempt = 1; attempt <= 2; attempt++) {
+    for (let attempt = 1; attempt <= 3; attempt++) {
       try {
-        return await this.crawlerService.simulate(newSimulateDto);
+        return await this.crawlerService.simulate({
+          initialValue: newSimulateDto.initialValue?.toString() ?? '0',
+          monthlyValue: newSimulateDto.monthlyValue?.toString() ?? '0',
+          period: newSimulateDto.period?.toString() ?? '0',
+        });
       } catch (error) {
-        if (attempt === 2) {
+        if (attempt === 3) {
           throw error;
         }
         console.log(`Attempt ${attempt} failed. Retrying...`);
