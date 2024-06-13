@@ -46,6 +46,8 @@ export class CrawlerService {
     const tab = await this.tabService.getFreeTab();
 
     try {
+      const fees = await this.getCurrentFees();
+
       const $investimento_inicial = await tab.page.$('#investimento_inicial');
       const $aporte_iniciais = await tab.page.$('#aporte_iniciais');
       const $periodo = await tab.page.$('#periodo');
@@ -59,6 +61,12 @@ export class CrawlerService {
       await $investimento_inicial.type(newSimulate.initialValue);
       await $aporte_iniciais.type(newSimulate.monthlyValue);
       await $periodo.type(newSimulate.period);
+      await $disclaimer_inputs.click();
+
+      const $taxa_selic = await tab.page.$('#taxa_selic');
+      await $taxa_selic.evaluate((input) => (input.textContent = ''));
+      await $disclaimer_inputs.click();
+      await $taxa_selic.type(fees.selic.value.toString());
       await $disclaimer_inputs.click();
 
       try {

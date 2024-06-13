@@ -43,7 +43,7 @@ export interface Cache {
 })
 export class StorageService {
   private cache = new Map<string, Cache>();
-  private fees?: OflineFees;
+  private fees?: Fees;
 
   getCache() {
     return this.cache;
@@ -57,7 +57,7 @@ export class StorageService {
     return this.fees;
   }
 
-  updateFees(fees: OflineFees) {
+  updateFees(fees: Fees) {
     const hasUndefinedValues = Object.values(fees).some((x) => x == null || x == undefined);
     if (hasUndefinedValues) {
       fees = undefined;
