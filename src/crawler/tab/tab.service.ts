@@ -19,6 +19,7 @@ export class TabService {
     setInterval(() => {
       this.tabs.forEach(async (x) => {
         if (!x.inUse) {
+          this.logger.debug(`destroing tab for inactivity`);
           this.destroyTab(x.id);
         }
       });
