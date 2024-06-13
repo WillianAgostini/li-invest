@@ -1,4 +1,4 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { Injectable, Logger, Scope } from '@nestjs/common';
 
 export interface DetailedValues {
   value: string;
@@ -42,6 +42,8 @@ export interface Cache {
   scope: Scope.DEFAULT,
 })
 export class StorageService {
+  private readonly logger = new Logger(StorageService.name);
+
   private cache = new Map<string, Cache>();
   private fees?: Fees;
 
@@ -57,11 +59,29 @@ export class StorageService {
     return this.fees;
   }
 
+  private hasUndefinedOrNullValues(obj: any): boolean {
+    if (obj === undefined || obj === null) return true;
+    if (typeof obj !== 'object') return false;
+
+    for (const key in obj) {
+      if (this.hasUndefinedOrNullValues(obj[key])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   updateFees(fees: Fees) {
-    const hasUndefinedValues = Object.values(fees).some((x) => x == null || x == undefined);
-    if (hasUndefinedValues) {
+    try {
+      if (this.hasUndefinedOrNullValues(fees)) {
+        this.logger.debug('hasUndefinedOrNullValues on fees');
+        fees = undefined;
+      }
+    } catch (error) {
+      this.logger.error(error);
       fees = undefined;
     }
+
     this.fees = fees;
   }
 }
