@@ -14,6 +14,17 @@ export class TabService {
 
   private readonly url = 'http://localhost:5000';
 
+  constructor() {
+    const time = parseInt(process.env.DESTROY_OFF_PAGES_ON_SEC) || 60;
+    setInterval(() => {
+      this.tabs.forEach(async (x) => {
+        if (!x.inUse) {
+          this.destroyTab(x.id);
+        }
+      });
+    }, time * 1000);
+  }
+
   private async getBrowser(): Promise<Browser> {
     if (!this.browser) {
       if (process.env.PRODUCTION == 'false') {
@@ -68,6 +79,11 @@ export class TabService {
       freeTab = { id, page: undefined, inUse: true };
       this.tabs.push(freeTab);
       const page = await this.newPage();
+      page.on(PageEvent.Error, (error) => {
+        this.logger.error(error);
+        this.destroyTab(id);
+      });
+
       freeTab.page = page;
       return { id, page };
     }
@@ -110,8 +126,8 @@ export class TabService {
     this.logger.debug(`destroyTab of ${this.tabs.length}`);
 
     const tab = this.tabs.find((tab) => tab.id === tabId);
-    if (!tab.page.isClosed()) await tab?.page?.close();
     this.tabs = this.tabs.filter((tab) => tab.id !== tabId);
+    if (!tab.page.isClosed()) await tab?.page?.close();
   }
 
   async close(): Promise<void> {
