@@ -48,25 +48,19 @@ export class CrawlerService {
     try {
       const fees = await this.getCurrentFees();
 
-      const $investimento_inicial = await tab.page.$('#investimento_inicial');
-      const $aporte_iniciais = await tab.page.$('#aporte_iniciais');
-      const $periodo = await tab.page.$('#periodo');
+      await this.updateTextContent(tab.page, '#periodo', '0');
+
+      await this.updateTextContent(tab.page, '#taxa_selic', fees.selic.value);
+      await this.updateTextContent(tab.page, '#taxa_cdi', fees.cdi.value);
+      await this.updateTextContent(tab.page, '#ipca', fees.ipca.value);
+      await this.updateTextContent(tab.page, '#tr', fees.tr.value);
+      await this.updateTextContent(tab.page, '#taxa_poupanca', fees.poupanca.value);
+
+      await this.updateTextContent(tab.page, '#investimento_inicial', newSimulate.initialValue);
+      await this.updateTextContent(tab.page, '#aporte_iniciais', newSimulate.monthlyValue);
+      await this.updateTextContent(tab.page, '#periodo', newSimulate.period);
+
       const $disclaimer_inputs = await tab.page.$('.disclaimer-inputs');
-
-      await $investimento_inicial.evaluate((input) => (input.textContent = ''));
-      await $aporte_iniciais.evaluate((input) => (input.textContent = ''));
-      await $periodo.evaluate((input) => (input.textContent = ''));
-      await $disclaimer_inputs.click();
-
-      await $investimento_inicial.type(newSimulate.initialValue);
-      await $aporte_iniciais.type(newSimulate.monthlyValue);
-      await $periodo.type(newSimulate.period);
-      await $disclaimer_inputs.click();
-
-      const $taxa_selic = await tab.page.$('#taxa_selic');
-      await $taxa_selic.evaluate((input) => (input.textContent = ''));
-      await $disclaimer_inputs.click();
-      await $taxa_selic.type(fees.selic.value.toString().replace('.', ','));
       await $disclaimer_inputs.click();
 
       try {
@@ -134,6 +128,14 @@ export class CrawlerService {
     } finally {
       this.logger.debug('simulate finish');
     }
+  }
+
+  private async updateTextContent(page: Page, id: string, value: string) {
+    const page_id = await page.waitForSelector(id);
+    await page_id.evaluate((input) => (input.textContent = ''));
+    await page_id.type(value, {
+      delay: 1,
+    });
   }
 
   normalizeInput(newSimulate: NewSimulate): NewSimulate {

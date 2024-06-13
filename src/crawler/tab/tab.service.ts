@@ -46,6 +46,7 @@ export class TabService {
     const cache = this.storageService.getCache();
     const browser = await this.getBrowser();
     const page = await browser.newPage();
+    await page.setViewport({ width: 1920, height: 1080 });
 
     await page.setRequestInterception(true);
     const requestInterceptor = async (request) => {

@@ -10,7 +10,7 @@ export class FeeService {
   async getAll() {
     const cdi = await this.getCdi();
     const ipca = await this.getIpca();
-    const selic = await this.getSelicMeta();
+    const selic = await this.getSelicOver();
     const poupanca = await this.getPoupanca();
     const tr = await this.getTr();
     return {
@@ -24,7 +24,7 @@ export class FeeService {
 
   async getPoupanca() {
     const { data } = await firstValueFrom(this.httpService.get('https://api.bcb.gov.br/dados/serie/bcdata.sgs.195/dados/ultimos/1?formato=json'));
-    const value = data[0].valor;
+    const value = parseFloat(data[0].valor).toFixed(4).replace('.', ',');
     const updatedAt = data[0].data;
     return {
       value,
@@ -35,7 +35,7 @@ export class FeeService {
 
   async getSelicOver() {
     const { data } = await firstValueFrom(this.httpService.get('https://api.bcb.gov.br/dados/serie/bcdata.sgs.1178/dados/ultimos/1?formato=json'));
-    const value = data[0].valor;
+    const value = parseFloat(data[0].valor).toFixed(2).replace('.', ',');
     const updatedAt = data[0].data;
     return {
       value,
@@ -45,7 +45,7 @@ export class FeeService {
 
   async getSelicMeta() {
     const { data } = await firstValueFrom(this.httpService.get('https://www.bcb.gov.br/api/servico/sitebcb/historicotaxasjuros'));
-    const value = data.conteudo[0].MetaSelic;
+    const value = parseFloat(data.conteudo[0].MetaSelic).toFixed(2).replace('.', ',');
     const today = new Date();
     const updatedAt = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
 
@@ -58,7 +58,7 @@ export class FeeService {
 
   async getCdi() {
     const { data } = await firstValueFrom(this.httpService.get('https://api.bcb.gov.br/dados/serie/bcdata.sgs.4389/dados/ultimos/1?formato=json'));
-    const value = data[0].valor;
+    const value = parseFloat(data[0].valor).toFixed(2).replace('.', ',');
     const updatedAt = data[0].data;
     return {
       value,
@@ -73,7 +73,7 @@ export class FeeService {
         'https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoInflacao12Meses?$top=1&$format=json&$select=Indicador,Data,Suavizada,Mediana,baseCalculo&$filter=Indicador%20eq%20%27IPCA%27%20and%20baseCalculo%20eq%200%20and%20Suavizada%20eq%20%27S%27&$orderby=Data%20desc',
       ),
     );
-    const value = data.value[0].Mediana;
+    const value = parseFloat(data.value[0].Mediana).toFixed(2).replace('.', ',');
     const updatedAt = data.value[0].Data;
     return {
       value,
@@ -84,7 +84,7 @@ export class FeeService {
 
   async getTr() {
     const { data } = await firstValueFrom(this.httpService.get('https://api.bcb.gov.br/dados/serie/bcdata.sgs.226/dados/ultimos/1?formato=json'));
-    const value = data[0].valor;
+    const value = parseFloat(data[0].valor).toFixed(4).replace('.', ',');
     const updatedAt = data[0].data;
     return {
       value,
