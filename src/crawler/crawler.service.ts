@@ -28,7 +28,7 @@ export class CrawlerService {
     }
 
     this.logger.debug('getCurrentFees finish');
-    return fees;
+    return JSON.parse(JSON.stringify(fees));
   }
 
   private async getFeesOnline() {
