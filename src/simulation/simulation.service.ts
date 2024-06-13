@@ -19,6 +19,7 @@ export class SimulationService {
           initialValue: newSimulateDto.initialValue?.toString() ?? '0',
           monthlyValue: newSimulateDto.monthlyValue?.toString() ?? '0',
           period: newSimulateDto.period?.toString() ?? '0',
+          cdbReturn: newSimulateDto.cdbReturn?.toString(),
         });
       } catch (error) {
         if (attempt === 3) {
