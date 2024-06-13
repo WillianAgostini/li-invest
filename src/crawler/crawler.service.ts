@@ -66,7 +66,7 @@ export class CrawlerService {
       const $taxa_selic = await tab.page.$('#taxa_selic');
       await $taxa_selic.evaluate((input) => (input.textContent = ''));
       await $disclaimer_inputs.click();
-      await $taxa_selic.type(fees.selic.value.toString());
+      await $taxa_selic.type(fees.selic.value.replace('.', ','));
       await $disclaimer_inputs.click();
 
       try {
