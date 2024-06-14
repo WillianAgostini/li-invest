@@ -15,7 +15,7 @@ export class FeedbackController {
   async simulate(@Body() newFeedbackDto: NewFeedbackDto): Promise<void> {
     try {
       this.logger.debug(newFeedbackDto, 'newSimulateDto');
-      await this.feedbackService.insertData(newFeedbackDto);
+      await this.feedbackService.insert(newFeedbackDto);
     } catch (error) {
       throw new Error('exception ' + error?.message);
     }

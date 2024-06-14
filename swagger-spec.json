@@ -166,20 +166,24 @@
         "properties": {
           "amount": {
             "type": "number",
-            "description": "Valor do investimento"
+            "description": "Valor do investimento",
+            "example": 1000
           },
           "months": {
             "type": "number",
-            "description": "Meses de investimento"
+            "description": "Meses de investimento",
+            "example": 12
           },
           "cdb": {
             "type": "number",
             "description": "CDB/RDB percentual DI",
+            "example": 100,
             "default": 100
           },
           "lcx": {
             "type": "number",
             "description": "LCI/LCA percentual DI",
+            "example": 100,
             "default": 100
           }
         },

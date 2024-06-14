@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { FinanceService } from 'src/finance/finance.service';
 import { getDurationInDays } from 'src/utils/conveter';
 import { SimulateDto } from './dto/simulate-dto';
-import { isNullOrUndefined } from 'src/utils/check';
+import { isNullOrUndefined } from 'src/utils/util';
 
 @Injectable()
 export class SimulationService {
