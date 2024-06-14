@@ -9,7 +9,8 @@ export class FeeService {
 
   async getAll() {
     const [di, tr, cdi, ipca, selic, poupanca] = await Promise.all([
-      this.getDi(),
+      // this.getDi(),
+      this.getCdi(),
       this.getTr(),
       this.getCdi(),
       this.getIpca(),
