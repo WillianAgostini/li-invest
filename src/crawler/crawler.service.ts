@@ -4,7 +4,7 @@ import { convertCurrencyStringToNumber } from 'src/utils/conveter';
 import { delay } from 'src/utils/time';
 import { FeeService } from './fee/fee.service';
 import { NewSimulate } from './interface/new-simulate';
-import { OflineFees, StorageService } from './storage/storage.service';
+import { Fees, OflineFees, StorageService } from './storage/storage.service';
 import { TabService } from './tab/tab.service';
 
 @Injectable({
@@ -19,19 +19,20 @@ export class CrawlerService {
     private feeService: FeeService,
   ) {}
 
-  async getCurrentFees() {
+  async getCurrentFees(): Promise<Fees | undefined> {
     this.logger.debug('getCurrentFees init');
 
     let fees = this.storageService.getFees();
     if (!fees) {
-      fees = await this.getFeesOnline();
+      fees = await this.getAllFees();
     }
 
     this.logger.debug('getCurrentFees finish');
-    return JSON.parse(JSON.stringify(fees));
+    if (!fees) return undefined;
+    return JSON.parse(JSON.stringify(fees)) as Fees;
   }
 
-  private async getFeesOnline() {
+  private async getAllFees() {
     const tab = await this.tabService.getFreeTab();
     const [onlineFees, pageFees] = await Promise.all([this.feeService.getAll(), this.getFeesOnPage(tab.page)]);
     this.storageService.updateFees({ ...pageFees, ...onlineFees });
