@@ -51,6 +51,8 @@ export class FinanceService {
       this.validateIsNull(fees);
       this.cache = fees;
     }
+    this.cache.rentabilidadeCdb = parseInt(process.env.RENTABILIDADE_CDB) || 100;
+    this.cache.rentabilidadeLcx = parseInt(process.env.RENTABILIDADE_LCX) || 100;
 
     return clone(this.cache);
   }
