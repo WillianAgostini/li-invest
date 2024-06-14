@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UrlService } from './url.service';
+import { FinanceService } from './finance.service';
 
-describe('AllowUrlService', () => {
-  let service: UrlService;
+describe('FinanceService', () => {
+  let service: FinanceService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UrlService],
+      providers: [FinanceService],
     }).compile();
 
-    service = module.get<UrlService>(UrlService);
+    service = module.get<FinanceService>(FinanceService);
   });
 
   it('should be defined', () => {

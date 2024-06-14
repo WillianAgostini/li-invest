@@ -1,6 +1,6 @@
 export class NewSimulateDto {
-  initialValue: number;
-  monthlyValue: number;
-  period: number;
-  cdbReturn?: number;
+  amount: number;
+  months: number;
+  lcx: number;
+  cdb: number;
 }

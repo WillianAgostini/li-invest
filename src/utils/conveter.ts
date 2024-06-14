@@ -1,15 +1,9 @@
-export function convertCurrencyStringToNumber(currencyString: string): string {
-  let cleanedString = currencyString.replace('R$ ', '');
-  const decimalPart = ',00';
-  cleanedString = cleanedString.replace('.', '').replace(',', '.');
+const periodMultiplier = {
+  days: 1,
+  months: 365 / 12,
+  years: 365,
+};
 
-  if (!cleanedString.includes('.')) {
-    cleanedString += decimalPart;
-  } else {
-    const [integerPart] = cleanedString.split('.');
-    cleanedString = integerPart + decimalPart;
-  }
-
-  cleanedString = cleanedString.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  return cleanedString;
+export function getDurationInDays(months: number) {
+  return Math.floor(months * periodMultiplier['months']);
 }

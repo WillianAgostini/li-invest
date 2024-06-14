@@ -1,32 +1,22 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CrawlerService } from 'src/crawler/crawler.service';
 import { NewSimulateDto } from './dto/new-simulate-dto';
+import { FinanceService } from 'src/finance/finance.service';
+import { getDurationInDays } from 'src/utils/conveter';
 
 @Injectable()
 export class SimulationService {
   private readonly logger = new Logger(SimulationService.name);
 
-  constructor(private crawlerService: CrawlerService) {}
+  constructor(private financeService: FinanceService) {}
 
   async getFees() {
-    return await this.crawlerService.getCurrentFees();
+    return await this.financeService.getCurrentFees();
   }
 
   async simulate(newSimulateDto: NewSimulateDto) {
-    for (let attempt = 1; attempt <= 3; attempt++) {
-      try {
-        return await this.crawlerService.simulate({
-          initialValue: newSimulateDto.initialValue?.toString() ?? '0',
-          monthlyValue: newSimulateDto.monthlyValue?.toString() ?? '0',
-          period: newSimulateDto.period?.toString() ?? '0',
-          cdbReturn: newSimulateDto.cdbReturn?.toString(),
-        });
-      } catch (error) {
-        if (attempt === 3) {
-          throw error;
-        }
-        console.log(`Attempt ${attempt} failed. Retrying...`);
-      }
-    }
+    return await this.financeService.simulate({
+      ...newSimulateDto,
+      days: getDurationInDays(newSimulateDto.months),
+    });
   }
 }

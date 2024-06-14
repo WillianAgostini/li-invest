@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { CrawlerModule } from './crawler/crawler.module';
-import { SimulationController } from './simulation/simulation.controller';
-import { SimulationService } from './simulation/simulation.service';
 import { FeedbackController } from './feedback/feedback.controller';
 import { FeedbackService } from './feedback/feedback.service';
+import { FinanceModule } from './finance/finance.module';
+import { SimulationController } from './simulation/simulation.controller';
+import { SimulationService } from './simulation/simulation.service';
 
 @Module({
-  imports: [CrawlerModule],
+  imports: [FinanceModule],
   controllers: [SimulationController, FeedbackController],
   providers: [SimulationService, FeedbackService],
 })

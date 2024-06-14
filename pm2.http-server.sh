@@ -1,1 +1,0 @@
-pm2 start http-server --name "my-http-server" -- localSite -c-1 -p 5000 -s
