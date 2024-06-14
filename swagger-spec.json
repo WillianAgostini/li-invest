@@ -174,18 +174,18 @@
           },
           "cdb": {
             "type": "number",
-            "description": "CDB/RDB percentual DI"
+            "description": "CDB/RDB percentual DI",
+            "default": 100
           },
           "lcx": {
             "type": "number",
-            "description": "LCI/LCA percentual DI"
+            "description": "LCI/LCA percentual DI",
+            "default": 100
           }
         },
         "required": [
           "amount",
-          "months",
-          "cdb",
-          "lcx"
+          "months"
         ]
       },
       "CdbResult": {

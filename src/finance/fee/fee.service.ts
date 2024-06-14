@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { DetailedValues, Fees } from '../interface/fees';
+import { isNullOrUndefined } from 'src/utils/check';
 
 @Injectable()
 export class FeeService {
@@ -17,6 +18,17 @@ export class FeeService {
       this.getSelicOver(),
       this.getPoupanca(),
     ]);
+
+    if (
+      isNullOrUndefined(cdi.value) ||
+      isNullOrUndefined(di.value) ||
+      isNullOrUndefined(ipca.value) ||
+      isNullOrUndefined(poupanca.value) ||
+      isNullOrUndefined(selic.value) ||
+      isNullOrUndefined(tr.value)
+    ) {
+      throw new Error('failed to search fees');
+    }
 
     return {
       di,
