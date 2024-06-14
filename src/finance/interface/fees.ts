@@ -50,4 +50,16 @@ export class Fees {
     type: DetailedValues,
   })
   poupanca: DetailedValues;
+
+  @ApiProperty({
+    description: 'CDB/RDB % DI',
+    type: Number,
+  })
+  rentabilidadeCdb: number = 100;
+
+  @ApiProperty({
+    description: 'LCI/LCA % DI',
+    type: Number,
+  })
+  rentabilidadeLcx: number = 100;
 }

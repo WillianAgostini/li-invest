@@ -150,6 +150,14 @@
                 "$ref": "#/components/schemas/DetailedValues"
               }
             ]
+          },
+          "rentabilidadeCdb": {
+            "type": "number",
+            "description": "CDB/RDB % DI"
+          },
+          "rentabilidadeLcx": {
+            "type": "number",
+            "description": "LCI/LCA % DI"
           }
         },
         "required": [
@@ -158,7 +166,9 @@
           "ipca",
           "cdi",
           "selic",
-          "poupanca"
+          "poupanca",
+          "rentabilidadeCdb",
+          "rentabilidadeLcx"
         ]
       },
       "SimulateDto": {
