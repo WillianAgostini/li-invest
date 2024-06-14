@@ -15,8 +15,8 @@ export class SimulationService {
   }
 
   async simulate(simulateDto: SimulateDto) {
-    simulateDto.cdb = isNullOrUndefined(simulateDto.cdb) ? simulateDto.cdb : 100;
-    simulateDto.lcx = isNullOrUndefined(simulateDto.lcx) ? simulateDto.lcx : 100;
+    simulateDto.cdb = !isNullOrUndefined(simulateDto.cdb) ? simulateDto.cdb : 100;
+    simulateDto.lcx = !isNullOrUndefined(simulateDto.lcx) ? simulateDto.lcx : 100;
     return await this.financeService.simulate({
       ...simulateDto,
       days: getDurationInDays(simulateDto.months),
