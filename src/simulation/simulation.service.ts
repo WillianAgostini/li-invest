@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { NewSimulateDto } from './dto/new-simulate-dto';
 import { FinanceService } from 'src/finance/finance.service';
 import { getDurationInDays } from 'src/utils/conveter';
+import { SimulateDto } from './dto/simulate-dto';
+import { isNullOrUndefined } from 'src/utils/check';
 
 @Injectable()
 export class SimulationService {
@@ -13,10 +14,12 @@ export class SimulationService {
     return await this.financeService.getCurrentFees();
   }
 
-  async simulate(newSimulateDto: NewSimulateDto) {
+  async simulate(simulateDto: SimulateDto) {
+    simulateDto.cdb = isNullOrUndefined(simulateDto.cdb) ? simulateDto.cdb : 100;
+    simulateDto.lcx = isNullOrUndefined(simulateDto.lcx) ? simulateDto.lcx : 100;
     return await this.financeService.simulate({
-      ...newSimulateDto,
-      days: getDurationInDays(newSimulateDto.months),
+      ...simulateDto,
+      days: getDurationInDays(simulateDto.months),
     });
   }
 }

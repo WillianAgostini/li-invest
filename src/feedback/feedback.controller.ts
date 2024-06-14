@@ -1,5 +1,7 @@
 import { Body, Controller, Logger, Post } from '@nestjs/common';
 import { FeedbackService } from './feedback.service';
+import { NewFeedbackDto } from './dto/new-feedback-dto';
+import { ApiBody, ApiResponse } from '@nestjs/swagger';
 
 @Controller('feedback')
 export class FeedbackController {
@@ -8,7 +10,9 @@ export class FeedbackController {
   constructor(private feedbackService: FeedbackService) {}
 
   @Post()
-  async simulate(@Body() newFeedbackDto: any): Promise<void> {
+  @ApiBody({ type: NewFeedbackDto })
+  @ApiResponse({ status: 201 })
+  async simulate(@Body() newFeedbackDto: NewFeedbackDto): Promise<void> {
     try {
       this.logger.debug(newFeedbackDto, 'newSimulateDto');
       await this.feedbackService.insertData(newFeedbackDto);

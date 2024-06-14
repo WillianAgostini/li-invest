@@ -1,11 +1,5 @@
-import { InvestmentData } from '../interface/investment-data';
+import { CdbResult } from '../interface/simulate-result';
 import * as finance from './finance';
-
-export interface CdbResult extends InvestmentData {
-  taxAmount: number;
-  taxPercentage: number;
-  iofAmount: number;
-}
 
 export function getCDBResult(amount: number, di: number, yearlyIndex: number, days: number): CdbResult {
   const interestAmount = finance.compoundInterest(amount, getIndexCDB(yearlyIndex, di), days);

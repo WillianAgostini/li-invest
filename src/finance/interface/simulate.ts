@@ -1,4 +1,4 @@
-import { NewSimulateDto as SimulateDto } from 'src/simulation/dto/new-simulate-dto';
+import { SimulateDto } from 'src/simulation/dto/simulate-dto';
 
 export class Simulate extends SimulateDto {
   days: number;

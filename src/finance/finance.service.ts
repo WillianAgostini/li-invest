@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { Simulate } from './interface/simulate';
-import { StorageService } from './storage/storage.service';
 import { FeeService } from './fee/fee.service';
+import { Simulate } from './interface/simulate';
 import { getCDBResult } from './investment/cdb';
 import { getLcxResult } from './investment/lcx';
 import { getPoupancaResult } from './investment/poupanca';
+import { StorageService } from './storage/storage.service';
+import { SimulateResult } from './interface/simulate-result';
+import { Fees } from './interface/fees';
 
 @Injectable()
 export class FinanceService {
@@ -13,7 +15,7 @@ export class FinanceService {
     private feeService: FeeService,
   ) {}
 
-  async getCurrentFees() {
+  async getCurrentFees(): Promise<Fees> {
     let fees = this.storageService.getFees();
     if (!fees) {
       fees = await this.feeService.getAll();
@@ -22,14 +24,12 @@ export class FinanceService {
     return fees;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async simulate(simulate: Simulate) {
+  async simulate(simulate: Simulate): Promise<SimulateResult> {
     const fees = await this.getCurrentFees();
     const cdb = getCDBResult(simulate.amount, fees.di.value, simulate.cdb, simulate.days);
     const lcx = getLcxResult(simulate.amount, fees.di.value, simulate.lcx, simulate.days);
     const poupanca = getPoupancaResult(simulate.amount, fees.poupanca.value, simulate.days);
     return {
-      investedAmount: simulate.amount,
       cdb,
       lcx,
       poupanca,

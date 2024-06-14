@@ -34,7 +34,6 @@ export class FeeService {
     return {
       value: 10,
       updatedAt: new Date().toString(),
-      description: 'DI',
     } as DetailedValues;
   }
 
@@ -45,7 +44,6 @@ export class FeeService {
     return {
       value,
       updatedAt,
-      description: 'Rentabilidade da Poupança (a.m.) %',
     } as DetailedValues;
   }
 
@@ -68,7 +66,6 @@ export class FeeService {
     return {
       value,
       updatedAt,
-      description: 'SELIC meta (a.a.) %',
     } as DetailedValues;
   }
 
@@ -79,7 +76,6 @@ export class FeeService {
     return {
       value,
       updatedAt,
-      description: 'CDI (a.a.) %',
     } as DetailedValues;
   }
 
@@ -94,7 +90,6 @@ export class FeeService {
     return {
       value,
       updatedAt,
-      description: 'IPCA (a.a.) %',
     } as DetailedValues;
   }
 
@@ -105,7 +100,6 @@ export class FeeService {
     return {
       value,
       updatedAt,
-      description: 'Taxa Referencial (a.m.) %',
     } as DetailedValues;
   }
 }

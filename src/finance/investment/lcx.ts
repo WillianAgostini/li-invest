@@ -1,4 +1,4 @@
-import { InvestmentData } from '../interface/investment-data';
+import { InvestmentData } from '../interface/simulate-result';
 import * as finance from './finance';
 
 export function getLcxResult(amount: number, di: number, yearlyIndex: number, periods: number): InvestmentData {

@@ -1,4 +1,4 @@
-import { InvestmentData } from '../interface/investment-data';
+import { InvestmentData } from '../interface/simulate-result';
 import * as finance from './finance';
 
 export function getPoupancaResult(amount: number, index: number, periods: number): InvestmentData {

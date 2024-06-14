@@ -1,0 +1,308 @@
+{
+  "openapi": "3.1.0",
+  "paths": {
+    "/simulation/getFees": {
+      "get": {
+        "operationId": "SimulationController_getFees",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Fees"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/simulation": {
+      "post": {
+        "operationId": "SimulationController_simulate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulateResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feedback": {
+      "post": {
+        "operationId": "FeedbackController_simulate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewFeedbackDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "Investment Advisor",
+    "description": "Assists in choosing fixed-income investments: CDB, RDB, LCI, LCA, and Savings Account.",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "https://lb-node-willians-project-0e2f53cf.koyeb.app"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "DetailedValues": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "description": "Valor em %"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Data de atualização"
+          }
+        },
+        "required": [
+          "value",
+          "updatedAt"
+        ]
+      },
+      "Fees": {
+        "type": "object",
+        "properties": {
+          "di": {
+            "description": "Fundos de Investimento",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "tr": {
+            "description": "Taxa Referencial (a.m.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "ipca": {
+            "description": "IPCA (a.a.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "cdi": {
+            "description": "CDI (a.a.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "selic": {
+            "description": "SELIC (a.a.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "poupanca": {
+            "description": "Rentabilidade da Poupança (a.m.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          }
+        },
+        "required": [
+          "di",
+          "tr",
+          "ipca",
+          "cdi",
+          "selic",
+          "poupanca"
+        ]
+      },
+      "SimulateDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Valor do investimento"
+          },
+          "months": {
+            "type": "number",
+            "description": "Meses de investimento"
+          },
+          "cdb": {
+            "type": "number",
+            "description": "CDB/RDB percentual DI"
+          },
+          "lcx": {
+            "type": "number",
+            "description": "LCI/LCA percentual DI"
+          }
+        },
+        "required": [
+          "amount",
+          "months",
+          "cdb",
+          "lcx"
+        ]
+      },
+      "CdbResult": {
+        "type": "object",
+        "properties": {
+          "investedAmount": {
+            "type": "number",
+            "description": "Valor Investido"
+          },
+          "interestAmount": {
+            "type": "number",
+            "description": "Rendimento Bruto"
+          },
+          "totalAmount": {
+            "type": "number",
+            "description": "Valor Total Líquido"
+          },
+          "taxAmount": {
+            "type": "number",
+            "description": "Valor total IOF"
+          },
+          "taxPercentage": {
+            "type": "number",
+            "description": "Taxa IOF"
+          },
+          "iofAmount": {
+            "type": "number",
+            "description": "Imposto de Renda"
+          }
+        },
+        "required": [
+          "investedAmount",
+          "interestAmount",
+          "totalAmount",
+          "taxAmount",
+          "taxPercentage",
+          "iofAmount"
+        ]
+      },
+      "InvestmentData": {
+        "type": "object",
+        "properties": {
+          "investedAmount": {
+            "type": "number",
+            "description": "Valor Investido"
+          },
+          "interestAmount": {
+            "type": "number",
+            "description": "Rendimento Bruto"
+          },
+          "totalAmount": {
+            "type": "number",
+            "description": "Valor Total Líquido"
+          }
+        },
+        "required": [
+          "investedAmount",
+          "interestAmount",
+          "totalAmount"
+        ]
+      },
+      "SimulateResult": {
+        "type": "object",
+        "properties": {
+          "cdb": {
+            "description": "CDB/RDB",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CdbResult"
+              }
+            ]
+          },
+          "lcx": {
+            "description": "LCI / LCA",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvestmentData"
+              }
+            ]
+          },
+          "poupanca": {
+            "description": "Poupança",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvestmentData"
+              }
+            ]
+          }
+        },
+        "required": [
+          "cdb",
+          "lcx",
+          "poupanca"
+        ]
+      },
+      "NewFeedbackDto": {
+        "type": "object",
+        "properties": {
+          "conversation": {
+            "type": "string",
+            "description": "Resumo atual do ChatGPT"
+          },
+          "userComment": {
+            "type": "string",
+            "description": "Descrição do problema ou sugestão de melhoria fornecida pelo usuário"
+          },
+          "category": {
+            "type": "string",
+            "description": "Categoria do feedback gerada pelo ChatGPT com base na descrição em userComment"
+          }
+        },
+        "required": [
+          "conversation",
+          "userComment",
+          "category"
+        ]
+      }
+    }
+  }
+}
