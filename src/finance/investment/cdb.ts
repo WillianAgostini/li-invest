@@ -8,7 +8,6 @@ export function getCDBResult(amount: number, di: number, yearlyIndex: number, da
   const taxAmount = (interestAmount - iofAmount) * (taxPercentage / 100);
   return {
     interestAmount,
-    investedAmount: amount,
     totalAmount: amount + interestAmount,
     taxAmount,
     taxPercentage,

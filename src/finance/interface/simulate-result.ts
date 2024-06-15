@@ -2,12 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class InvestmentData {
   @ApiProperty({
-    description: 'Valor Investido',
-    type: Number,
-  })
-  investedAmount: number;
-
-  @ApiProperty({
     description: 'Rendimento Bruto',
     type: Number,
   })

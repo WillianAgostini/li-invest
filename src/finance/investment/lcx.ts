@@ -5,7 +5,6 @@ export function getLcxResult(amount: number, di: number, yearlyIndex: number, pe
   const interestAmount = finance.compoundInterest(amount, getIndexLcx(yearlyIndex, di), periods);
   return {
     interestAmount,
-    investedAmount: amount,
     totalAmount: amount + interestAmount,
   };
 }

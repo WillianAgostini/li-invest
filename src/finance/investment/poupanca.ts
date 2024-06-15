@@ -5,7 +5,6 @@ export function getPoupancaResult(amount: number, index: number, periods: number
   const interestAmount = finance.compoundInterest(amount, getIndexPoupanca(index), calculateFullMonthsDays(periods));
   return {
     interestAmount,
-    investedAmount: amount,
     totalAmount: amount + interestAmount,
   };
 }
