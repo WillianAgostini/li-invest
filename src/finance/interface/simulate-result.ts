@@ -40,7 +40,45 @@ export class CdbResult extends InvestmentData {
   iofAmount: number;
 }
 
+export class Variables {
+  @ApiProperty({
+    description: 'CDB/RDB percentual DI',
+    type: Number,
+  })
+  cdb: number;
+
+  @ApiProperty({
+    description: 'LCI/LCA percentual DI',
+    type: Number,
+  })
+  lcx: number;
+
+  @ApiProperty({
+    description: 'Taxa DI (a.a) %',
+    type: Number,
+  })
+  di: number;
+
+  @ApiProperty({
+    description: 'Rentabilidade da Poupança (a.m.) %',
+    type: Number,
+  })
+  poupanca: number;
+}
+
 export class SimulateResult {
+  @ApiProperty({
+    description: 'Valor Investido',
+    type: Number,
+  })
+  investedAmount: number;
+
+  @ApiProperty({
+    description: 'Meses de investimento',
+    type: Number,
+  })
+  periodInMont: number;
+
   @ApiProperty({
     description: 'CDB/RDB',
     type: CdbResult,
@@ -58,4 +96,10 @@ export class SimulateResult {
     type: InvestmentData,
   })
   poupanca: InvestmentData;
+
+  @ApiProperty({
+    description: 'Variáveis utilizadas',
+    type: InvestmentData,
+  })
+  variables: Variables;
 }

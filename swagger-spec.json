@@ -104,7 +104,7 @@
         "type": "object",
         "properties": {
           "di": {
-            "description": "Fundos de Investimento",
+            "description": "Taxa DI (a.a) %",
             "allOf": [
               {
                 "$ref": "#/components/schemas/DetailedValues"
@@ -264,6 +264,14 @@
       "SimulateResult": {
         "type": "object",
         "properties": {
+          "investedAmount": {
+            "type": "number",
+            "description": "Valor Investido"
+          },
+          "periodInMont": {
+            "type": "number",
+            "description": "Meses de investimento"
+          },
           "cdb": {
             "description": "CDB/RDB",
             "allOf": [
@@ -287,12 +295,23 @@
                 "$ref": "#/components/schemas/InvestmentData"
               }
             ]
+          },
+          "variables": {
+            "description": "Variáveis utilizadas",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvestmentData"
+              }
+            ]
           }
         },
         "required": [
+          "investedAmount",
+          "periodInMont",
           "cdb",
           "lcx",
-          "poupanca"
+          "poupanca",
+          "variables"
         ]
       },
       "NewFeedbackDto": {

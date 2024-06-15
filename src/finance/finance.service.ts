@@ -31,9 +31,17 @@ export class FinanceService {
     const lcx = getLcxResult(simulate.amount, fees.di.value, simulate.lcx, simulate.days);
     const poupanca = getPoupancaResult(simulate.amount, fees.poupanca.value, simulate.days);
     return {
+      investedAmount: simulate.amount,
+      periodInMont: simulate.months,
       cdb,
       lcx,
       poupanca,
+      variables: {
+        di: fees.di.value,
+        cdb: simulate.cdb,
+        lcx: simulate.lcx,
+        poupanca: fees.poupanca.value,
+      },
     };
   }
 

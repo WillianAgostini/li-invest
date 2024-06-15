@@ -16,7 +16,7 @@ export class DetailedValues {
 
 export class Fees {
   @ApiProperty({
-    description: 'Fundos de Investimento',
+    description: 'Taxa DI (a.a) %',
     type: DetailedValues,
   })
   di: DetailedValues;
