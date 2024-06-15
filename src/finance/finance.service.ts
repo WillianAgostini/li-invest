@@ -32,7 +32,7 @@ export class FinanceService {
     const poupanca = getPoupancaResult(simulate.amount, fees.poupanca.value, simulate.days);
     return {
       investedAmount: simulate.amount,
-      periodInMont: simulate.months,
+      periodInMonths: simulate.months,
       cdb,
       lcx,
       poupanca,

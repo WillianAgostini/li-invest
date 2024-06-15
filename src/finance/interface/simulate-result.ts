@@ -77,7 +77,7 @@ export class SimulateResult {
     description: 'Meses de investimento',
     type: Number,
   })
-  periodInMont: number;
+  periodInMonths: number;
 
   @ApiProperty({
     description: 'CDB/RDB',

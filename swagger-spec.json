@@ -268,7 +268,7 @@
             "type": "number",
             "description": "Valor Investido"
           },
-          "periodInMont": {
+          "periodInMonths": {
             "type": "number",
             "description": "Meses de investimento"
           },
@@ -307,7 +307,7 @@
         },
         "required": [
           "investedAmount",
-          "periodInMont",
+          "periodInMonths",
           "cdb",
           "lcx",
           "poupanca",
