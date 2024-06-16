@@ -205,13 +205,9 @@
       "CdbResult": {
         "type": "object",
         "properties": {
-          "investedAmount": {
-            "type": "number",
-            "description": "Valor Investido"
-          },
           "interestAmount": {
             "type": "number",
-            "description": "Rendimento Bruto"
+            "description": "Rendimento Líquido"
           },
           "totalAmount": {
             "type": "number",
@@ -231,7 +227,6 @@
           }
         },
         "required": [
-          "investedAmount",
           "interestAmount",
           "totalAmount",
           "taxAmount",
@@ -242,13 +237,9 @@
       "InvestmentData": {
         "type": "object",
         "properties": {
-          "investedAmount": {
-            "type": "number",
-            "description": "Valor Investido"
-          },
           "interestAmount": {
             "type": "number",
-            "description": "Rendimento Bruto"
+            "description": "Rendimento Líquido"
           },
           "totalAmount": {
             "type": "number",
@@ -256,7 +247,6 @@
           }
         },
         "required": [
-          "investedAmount",
           "interestAmount",
           "totalAmount"
         ]

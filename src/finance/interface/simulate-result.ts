@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class InvestmentData {
   @ApiProperty({
-    description: 'Rendimento Bruto',
+    description: 'Rendimento Líquido',
     type: Number,
   })
   interestAmount: number;
