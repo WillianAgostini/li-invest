@@ -69,7 +69,7 @@ export class FinanceService {
     this.logger.debug('fetchAndUpdateRates');
     // eslint-disable-next-line prefer-const
     let [di, tr, cdi, ipca, selic, poupanca, financialRate] = await Promise.all([
-      this.feeService.getCdi(),
+      this.feeService.getSelicOver(),
       this.feeService.getTr(),
       this.feeService.getCdi(),
       this.feeService.getIpca(),

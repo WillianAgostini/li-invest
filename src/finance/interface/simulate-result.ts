@@ -5,7 +5,7 @@ export class InvestmentData {
     description: 'Rendimento Líquido',
     type: Number,
   })
-  interestAmount: number;
+  totalProfit: number;
 
   @ApiProperty({
     description: 'Valor Total Líquido',

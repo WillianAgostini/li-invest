@@ -10,7 +10,7 @@ export function getCDBResult(amount: number, di: number, yearlyIndex: number, da
   const totalAmount = amount + totalProfit
 
   return {
-    interestAmount,
+    totalProfit: totalProfit,
     totalAmount,
     taxAmount,
     taxPercentage,

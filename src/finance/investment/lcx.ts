@@ -4,7 +4,7 @@ import * as finance from './finance';
 export function getLcxResult(amount: number, di: number, yearlyIndex: number, periods: number): InvestmentData {
   const interestAmount = finance.compoundInterest(amount, getIndexLcx(yearlyIndex, di), periods);
   return {
-    interestAmount,
+    totalProfit: interestAmount,
     totalAmount: amount + interestAmount,
   };
 }

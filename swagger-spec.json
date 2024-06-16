@@ -205,7 +205,7 @@
       "CdbResult": {
         "type": "object",
         "properties": {
-          "interestAmount": {
+          "totalProfit": {
             "type": "number",
             "description": "Rendimento Líquido"
           },
@@ -227,7 +227,7 @@
           }
         },
         "required": [
-          "interestAmount",
+          "totalProfit",
           "totalAmount",
           "taxAmount",
           "taxPercentage",
@@ -237,7 +237,7 @@
       "InvestmentData": {
         "type": "object",
         "properties": {
-          "interestAmount": {
+          "totalProfit": {
             "type": "number",
             "description": "Rendimento Líquido"
           },
@@ -247,7 +247,7 @@
           }
         },
         "required": [
-          "interestAmount",
+          "totalProfit",
           "totalAmount"
         ]
       },
