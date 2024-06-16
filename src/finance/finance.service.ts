@@ -73,7 +73,7 @@ export class FinanceService {
       this.feeService.getTr(),
       this.feeService.getCdi(),
       this.feeService.getIpca(),
-      this.feeService.getSelicOver(),
+      this.feeService.getSelicMeta(),
       this.feeService.getPoupanca(),
       this.financialRateService.findAll(),
     ]);
