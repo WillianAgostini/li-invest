@@ -15,6 +15,6 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    return request.headers['api-key'] as string | undefined;
+    return request.headers['x-api-key'] as string | undefined;
   }
 }
