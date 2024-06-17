@@ -1,6 +1,5 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { StorageService } from './storage/storage.service';
 import { FeeService } from './fee/fee.service';
 import { FinanceService } from './finance.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -25,7 +24,7 @@ dotenv.config();
     HttpModule,
   ],
   controllers: [],
-  providers: [FinanceService, StorageService, FeeService, FinancialRateService],
+  providers: [FinanceService, FeeService, FinancialRateService],
   exports: [FinanceService],
 })
 export class FinanceModule {}
