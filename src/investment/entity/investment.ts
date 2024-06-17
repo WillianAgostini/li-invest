@@ -9,7 +9,7 @@ export class Investment {
   issuer: string;
 
   @Column({ type: 'varchar', nullable: false })
-  type: string;
+  type: 'LCA' | 'LCI' | 'CDB';
 
   @Column({ type: 'varchar', nullable: false, name: 'origin_bank' })
   originBank: string;
@@ -24,7 +24,7 @@ export class Investment {
   profitability: number;
 
   @Column({ type: 'varchar', nullable: false, name: 'profitability_type' })
-  profitabilityType: string;
+  profitabilityType: 'CDI';
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

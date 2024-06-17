@@ -24,11 +24,28 @@ export class FinanceService {
 
   async simulate(simulate: Simulate) {
     const fees = await this.getCurrentFees();
-    fees.rentabilidadeCdb = !isNullOrUndefined(simulate.cdb) ? simulate.cdb : 100;
-    fees.rentabilidadeLcx = !isNullOrUndefined(simulate.lcx) ? simulate.lcx : 100;
 
-    const cdb = getCDBResult(simulate.amount, fees.di.value, simulate.cdb, simulate.days);
-    const lcx = getLcxResult(simulate.amount, fees.di.value, simulate.lcx, simulate.days);
+    if (simulate.productObject?.id && simulate.productObject.profitabilityType == 'CDI') {
+      if (simulate.productObject.type == 'CDB') {
+        const rentabilidadeCdb = Number(simulate.productObject.profitability);
+        return {
+          investedAmount: simulate.amount,
+          periodInMonths: simulate.months,
+          cdb: getCDBResult(simulate.amount, fees.di.value, rentabilidadeCdb, simulate.days),
+        } as SimulateResult;
+      }
+      if (simulate.productObject.type == 'LCI' || simulate.productObject.type == 'LCA') {
+        const rentabilidadeLcx = Number(simulate.productObject.profitability);
+        return {
+          investedAmount: simulate.amount,
+          periodInMonths: simulate.months,
+          lcx: getLcxResult(simulate.amount, fees.di.value, rentabilidadeLcx, simulate.days),
+        } as SimulateResult;
+      }
+    }
+
+    const cdb = getCDBResult(simulate.amount, fees.di.value, simulate.cdb ?? fees.rentabilidadeCdb, simulate.days);
+    const lcx = getLcxResult(simulate.amount, fees.di.value, simulate.lcx ?? fees.rentabilidadeLcx, simulate.days);
     const poupanca = getPoupancaResult(simulate.amount, fees.poupanca.value, simulate.days);
     return {
       investedAmount: simulate.amount,

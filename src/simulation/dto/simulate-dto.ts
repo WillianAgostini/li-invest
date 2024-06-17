@@ -32,4 +32,11 @@ export class SimulateDto {
     default: 100,
   })
   lcx: number;
+
+  @ApiProperty({
+    description: 'Código do Produto de Investimento cadastrado pela Comunidade',
+    type: Number,
+    required: false,
+  })
+  productId?: number;
 }

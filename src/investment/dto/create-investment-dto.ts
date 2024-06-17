@@ -8,7 +8,9 @@ export class CreateInvestmentDto {
     required: false,
   })
   @IsNotEmpty()
-  @IsIn(['LCA', 'LCI', 'CDB'])
+  @IsIn(['LCA', 'LCI', 'CDB'], {
+    message: 'Disponíbel apenas investimento do tipo LCA, LCI ou CDB',
+  })
   type: 'LCA' | 'LCI' | 'CDB';
 
   @ApiProperty({
@@ -53,9 +55,13 @@ export class CreateInvestmentDto {
   @ApiProperty({
     description: 'Rentabilidade do',
     example: 'CDI',
+    default: 'CDI',
   })
   @IsNotEmpty()
-  profitabilityType: string;
+  @IsIn(['CDI'], {
+    message: 'Disponível apenas Rendimento por CDI no momento',
+  })
+  profitabilityType: 'CDI';
 }
 
 export class CreateInvestmentDtoResult extends CreateInvestmentDto {

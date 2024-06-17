@@ -12,6 +12,10 @@ export class InvestmentService {
     private investmentRepository: Repository<Investment>,
   ) {}
 
+  getById(id: number): any {
+    return this.investmentRepository.findOneBy({ id });
+  }
+
   async getAll() {
     return this.investmentRepository.find() as Promise<CreateInvestmentDtoResult[]>;
   }
