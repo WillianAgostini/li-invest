@@ -1,9 +1,10 @@
 import { Body, Controller, Logger, Post } from '@nestjs/common';
 import { FeedbackService } from './feedback.service';
 import { NewFeedbackDto } from './dto/new-feedback-dto';
-import { ApiBody, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('feedback')
+@ApiTags('feedback')
 export class FeedbackController {
   private readonly logger = new Logger(FeedbackController.name);
 

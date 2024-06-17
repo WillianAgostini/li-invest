@@ -8,12 +8,15 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'debug'],
   });
+  app.enableCors();
 
+  const port = process.env.PORT || 3000;
+  const serverUrl = process.env.URL_SERVER || process.env.PRODUCTION == 'true' ? 'https://li-invest.koyeb.app' : `http://localhost:${port}`;
   const config = new DocumentBuilder()
     .setTitle('Investment Advisor')
     .setDescription('Assists in choosing fixed-income investments: CDB, RDB, LCI, LCA, and Savings Account.')
     .setVersion('1.0')
-    .addServer('https://li-invest.koyeb.app')
+    .addServer(serverUrl)
     .build();
 
   const document = { ...SwaggerModule.createDocument(app, config), openapi: '3.1.0' };
@@ -29,7 +32,7 @@ async function bootstrap() {
   //   cdb: 100
   // }));
 
-  await app.listen(3000);
+  await app.listen(port);
   Logger.debug('Running');
 }
 bootstrap();

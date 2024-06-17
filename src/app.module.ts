@@ -8,6 +8,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Feedback } from './feedback/entity/feedback';
 import dotenv from 'dotenv';
 import { FinancialRate } from './finance/entity/financial-rate';
+import { InvestmentController } from './investment/investment.controller';
+import { InvestmentService } from './investment/investment.service';
+import { Investment } from './investment/entity/investment';
 dotenv.config();
 
 @Module({
@@ -20,12 +23,12 @@ dotenv.config();
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       ssl: { rejectUnauthorized: false },
-      entities: [Feedback, FinancialRate],
+      entities: [Feedback, FinancialRate, Investment],
     }),
-    TypeOrmModule.forFeature([Feedback, FinancialRate]),
+    TypeOrmModule.forFeature([Feedback, FinancialRate, Investment]),
     FinanceModule,
   ],
-  controllers: [SimulationController, FeedbackController],
-  providers: [SimulationService, FeedbackService],
+  controllers: [SimulationController, FeedbackController, InvestmentController],
+  providers: [SimulationService, FeedbackService, InvestmentService],
 })
 export class AppModule {}
