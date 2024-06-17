@@ -19,7 +19,7 @@ export class PoupancaResult extends InvestmentData {
     description: 'Rentabilidade da Poupança (a.m.) %',
     type: Number,
   })
-  poupanca: number;
+  profitability: number;
 }
 
 export class CdbResult extends InvestmentData {
@@ -52,7 +52,7 @@ export class CdbResult extends InvestmentData {
 
     type: Number,
   })
-  cdb: number;
+  profitability: number;
 }
 
 export class LcxResult extends InvestmentData {
@@ -60,7 +60,7 @@ export class LcxResult extends InvestmentData {
     description: 'LCI/LCA percentual CDI',
     type: Number,
   })
-  lcx: number;
+  profitability: number;
 
   @ApiProperty({
     description: 'CDI (a.a.) %',
@@ -81,12 +81,6 @@ export class SimulateResult {
     type: Number,
   })
   periodInMonths: number;
-
-  @ApiProperty({
-    description: 'Taxa CDI (a.a) %',
-    type: Number,
-  })
-  cdi: number;
 
   @ApiProperty({
     description: 'CDB/RDB',

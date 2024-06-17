@@ -7,7 +7,7 @@ export function getLcxResult(amount: number, di: number, yearlyIndex: number, pe
     totalProfit: interestAmount,
     totalAmount: amount + interestAmount,
     cdi: di,
-    lcx: yearlyIndex,
+    profitability: yearlyIndex,
   } as LcxResult;
 }
 

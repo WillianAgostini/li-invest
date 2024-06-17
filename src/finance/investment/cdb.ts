@@ -16,7 +16,7 @@ export function getCDBResult(amount: number, di: number, yearlyIndex: number, da
     taxPercentage,
     iofAmount,
     cdi: di,
-    cdb: yearlyIndex,
+    profitability: yearlyIndex,
   } as CdbResult;
 }
 

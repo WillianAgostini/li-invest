@@ -6,7 +6,7 @@ export function getPoupancaResult(amount: number, index: number, periods: number
   return {
     totalProfit: interestAmount,
     totalAmount: amount + interestAmount,
-    poupanca: index,
+    profitability: index,
   } as PoupancaResult;
 }
 

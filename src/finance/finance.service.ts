@@ -33,7 +33,6 @@ export class FinanceService {
     return {
       investedAmount: simulate.amount,
       periodInMonths: simulate.months,
-      cdi: fees.di.value,
       cdb,
       lcx,
       poupanca,
