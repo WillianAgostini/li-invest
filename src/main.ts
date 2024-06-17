@@ -12,7 +12,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const port = process.env.PORT || 3000;
-  const serverUrl = process.env.URL_SERVER || process.env.PRODUCTION == 'true' ? 'https://li-invest.koyeb.app' : `http://localhost:${port}`;
+  const serverUrl = process.env.URL_SERVER || 'https://li-invest.koyeb.app';
   const config = new DocumentBuilder()
     .setTitle('Investment Advisor')
     .setDescription('Assists in choosing fixed-income investments: CDB, RDB, LCI, LCA, and Savings Account.')
