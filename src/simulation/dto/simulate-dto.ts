@@ -16,7 +16,7 @@ export class SimulateDto {
   months: number;
 
   @ApiProperty({
-    description: 'CDB/RDB percentual DI',
+    description: 'CDB/RDB percentual CDI',
     type: Number,
     required: false,
     example: 100,
@@ -25,7 +25,7 @@ export class SimulateDto {
   cdb: number;
 
   @ApiProperty({
-    description: 'LCI/LCA percentual DI',
+    description: 'LCI/LCA percentual CDI',
     type: Number,
     required: false,
     example: 100,

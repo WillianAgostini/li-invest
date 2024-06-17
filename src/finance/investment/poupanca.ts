@@ -1,12 +1,13 @@
-import { InvestmentData } from '../interface/simulate-result';
+import { PoupancaResult } from '../interface/simulate-result';
 import * as finance from './finance';
 
-export function getPoupancaResult(amount: number, index: number, periods: number): InvestmentData {
+export function getPoupancaResult(amount: number, index: number, periods: number) {
   const interestAmount = finance.compoundInterest(amount, getIndexPoupanca(index), calculateFullMonthsDays(periods));
   return {
     totalProfit: interestAmount,
     totalAmount: amount + interestAmount,
-  };
+    poupanca: index,
+  } as PoupancaResult;
 }
 
 export function calculateFullMonthsDays(days: number): number {

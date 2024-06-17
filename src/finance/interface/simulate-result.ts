@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class InvestmentData {
+class InvestmentData {
   @ApiProperty({
     description: 'Rendimento Líquido',
     type: Number,
@@ -12,6 +12,14 @@ export class InvestmentData {
     type: Number,
   })
   totalAmount: number;
+}
+
+export class PoupancaResult extends InvestmentData {
+  @ApiProperty({
+    description: 'Rentabilidade da Poupança (a.m.) %',
+    type: Number,
+  })
+  poupanca: number;
 }
 
 export class CdbResult extends InvestmentData {
@@ -32,32 +40,33 @@ export class CdbResult extends InvestmentData {
     type: Number,
   })
   iofAmount: number;
-}
 
-export class Variables {
   @ApiProperty({
-    description: 'CDB/RDB percentual DI',
+    description: 'CDI (a.a.) %',
+    type: Number,
+  })
+  cdi: number;
+
+  @ApiProperty({
+    description: 'CDB/RDB percentual CDI',
+
     type: Number,
   })
   cdb: number;
+}
 
+export class LcxResult extends InvestmentData {
   @ApiProperty({
-    description: 'LCI/LCA percentual DI',
+    description: 'LCI/LCA percentual CDI',
     type: Number,
   })
   lcx: number;
 
   @ApiProperty({
-    description: 'Taxa DI (a.a) %',
+    description: 'CDI (a.a.) %',
     type: Number,
   })
-  di: number;
-
-  @ApiProperty({
-    description: 'Rentabilidade da Poupança (a.m.) %',
-    type: Number,
-  })
-  poupanca: number;
+  cdi: number;
 }
 
 export class SimulateResult {
@@ -74,6 +83,12 @@ export class SimulateResult {
   periodInMonths: number;
 
   @ApiProperty({
+    description: 'Taxa CDI (a.a) %',
+    type: Number,
+  })
+  cdi: number;
+
+  @ApiProperty({
     description: 'CDB/RDB',
     type: CdbResult,
   })
@@ -83,17 +98,11 @@ export class SimulateResult {
     description: 'LCI / LCA',
     type: InvestmentData,
   })
-  lcx: InvestmentData;
+  lcx: LcxResult;
 
   @ApiProperty({
     description: 'Poupança',
     type: InvestmentData,
   })
-  poupanca: InvestmentData;
-
-  @ApiProperty({
-    description: 'Variáveis utilizadas',
-    type: InvestmentData,
-  })
-  variables: Variables;
+  poupanca: PoupancaResult;
 }

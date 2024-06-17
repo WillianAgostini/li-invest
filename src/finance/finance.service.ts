@@ -22,7 +22,7 @@ export class FinanceService {
     setInterval(this.clearFees, 21600000); // 21.600.000 milissegundos = 6 hours
   }
 
-  async simulate(simulate: Simulate): Promise<SimulateResult> {
+  async simulate(simulate: Simulate) {
     const fees = await this.getCurrentFees();
     fees.rentabilidadeCdb = !isNullOrUndefined(simulate.cdb) ? simulate.cdb : 100;
     fees.rentabilidadeLcx = !isNullOrUndefined(simulate.lcx) ? simulate.lcx : 100;
@@ -33,19 +33,14 @@ export class FinanceService {
     return {
       investedAmount: simulate.amount,
       periodInMonths: simulate.months,
+      cdi: fees.di.value,
       cdb,
       lcx,
       poupanca,
-      variables: {
-        di: fees.di.value,
-        cdb: simulate.cdb,
-        lcx: simulate.lcx,
-        poupanca: fees.poupanca.value,
-      },
-    };
+    } as SimulateResult;
   }
 
-  async getCurrentFees(): Promise<Fees> {
+  async getCurrentFees() {
     return this.getAll();
   }
 
