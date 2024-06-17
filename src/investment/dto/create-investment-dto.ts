@@ -1,12 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsIn, IsNotEmpty } from 'class-validator';
 
 export class CreateInvestmentDto {
   @ApiProperty({
     description: 'Tipo da aplicação',
-    example: 'LCA',
+    examples: ['LCA', 'LCI', 'CDB'],
     required: false,
   })
-  type: string;
+  @IsNotEmpty()
+  @IsIn(['LCA', 'LCI', 'CDB'])
+  type: 'LCA' | 'LCI' | 'CDB';
 
   @ApiProperty({
     description: 'Emissor',
@@ -19,6 +22,7 @@ export class CreateInvestmentDto {
     description: 'Banco que disponibiliza o investimento',
     example: 'Itaú',
   })
+  @IsNotEmpty()
   originBank: string;
 
   @ApiProperty({
@@ -26,6 +30,7 @@ export class CreateInvestmentDto {
     example: 100.0,
     type: 'number',
   })
+  @IsNotEmpty()
   minimumApplication: number;
 
   @ApiProperty({
@@ -34,6 +39,7 @@ export class CreateInvestmentDto {
     type: 'string',
     format: 'date',
   })
+  @IsNotEmpty()
   maturity: Date;
 
   @ApiProperty({
@@ -41,12 +47,14 @@ export class CreateInvestmentDto {
     example: 100,
     type: 'number',
   })
+  @IsNotEmpty()
   profitability: number;
 
   @ApiProperty({
     description: 'Rentabilidade do',
     example: 'CDI',
   })
+  @IsNotEmpty()
   profitabilityType: string;
 }
 

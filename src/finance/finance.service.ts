@@ -24,8 +24,8 @@ export class FinanceService {
 
   async simulate(simulate: Simulate): Promise<SimulateResult> {
     const fees = await this.getCurrentFees();
-    fees.rentabilidadeCdb = simulate.cdb;
-    fees.rentabilidadeLcx = simulate.lcx;
+    fees.rentabilidadeCdb = !isNullOrUndefined(simulate.cdb) ? simulate.cdb : 100;
+    fees.rentabilidadeLcx = !isNullOrUndefined(simulate.lcx) ? simulate.lcx : 100;
 
     const cdb = getCDBResult(simulate.amount, fees.di.value, simulate.cdb, simulate.days);
     const lcx = getLcxResult(simulate.amount, fees.di.value, simulate.lcx, simulate.days);

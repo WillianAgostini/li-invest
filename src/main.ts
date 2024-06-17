@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -9,6 +9,7 @@ async function bootstrap() {
     logger: ['error', 'warn', 'debug'],
   });
   app.enableCors();
+  app.useGlobalPipes(new ValidationPipe());
 
   const port = process.env.PORT || 3000;
   const serverUrl = process.env.URL_SERVER || process.env.PRODUCTION == 'true' ? 'https://li-invest.koyeb.app' : `http://localhost:${port}`;
