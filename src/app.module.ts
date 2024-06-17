@@ -11,6 +11,8 @@ import { FinancialRate } from './finance/entity/financial-rate';
 import { InvestmentController } from './investment/investment.controller';
 import { InvestmentService } from './investment/investment.service';
 import { Investment } from './investment/entity/investment';
+import { AuthGuard } from './auth/auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 dotenv.config();
 
 @Module({
@@ -29,6 +31,14 @@ dotenv.config();
     FinanceModule,
   ],
   controllers: [SimulationController, FeedbackController, InvestmentController],
-  providers: [SimulationService, FeedbackService, InvestmentService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    SimulationService,
+    FeedbackService,
+    InvestmentService,
+  ],
 })
 export class AppModule {}
