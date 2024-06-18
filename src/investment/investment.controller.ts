@@ -20,7 +20,6 @@ export class InvestmentController {
   @ApiBody({ type: CreateInvestmentDto })
   @ApiResponse({ status: 201 })
   async post(@Body() createInvestmentDto: CreateInvestmentDto): Promise<void> {
-    this.logger.debug(createInvestmentDto, 'createInvestmentDto');
     await this.investmentService.insert(createInvestmentDto);
   }
 

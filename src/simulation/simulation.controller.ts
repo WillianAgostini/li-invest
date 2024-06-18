@@ -15,7 +15,6 @@ export class SimulationController {
   @ApiBody({ type: SimulateDto })
   @ApiResponse({ status: 201, type: SimulateResult })
   async simulate(@Body() simulateDto: SimulateDto): Promise<SimulateResult> {
-    this.logger.debug(simulateDto, 'SimulateDto');
     return await this.simulationService.simulate(simulateDto);
   }
 }

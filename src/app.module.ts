@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import dotenv from 'dotenv';
@@ -11,6 +11,7 @@ import { FinanceModule } from './finance/finance.module';
 import { Investment } from './investment/entity/investment';
 import { InvestmentController } from './investment/investment.controller';
 import { InvestmentService } from './investment/investment.service';
+import { LoggerMiddleware } from './middleware/logger.middleware';
 import { RealTimeController } from './real-time/real-time.controller';
 import { RegulationsController } from './regulations/regulations.controller';
 import { SimulationController } from './simulation/simulation.controller';
@@ -43,4 +44,8 @@ dotenv.config();
     InvestmentService,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}
