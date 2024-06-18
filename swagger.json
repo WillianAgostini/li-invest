@@ -89,7 +89,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/CreateInvestmentDtoResult"
+                    "$ref": "#/components/schemas/CreateInvestmentResultDto"
                   }
                 }
               }
@@ -176,15 +176,34 @@
           "regulations"
         ]
       }
+    },
+    "/realTime": {
+      "get": {
+        "operationId": "RealTimeController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RealTimeResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "realTime"
+        ]
+      }
     }
   },
   "info": {
     "title": "Investment Advisor",
     "description": "Assists in choosing fixed-income investments: CDB, RDB, LCI, LCA, and Savings Account.",
     "version": "1.0",
-    "contact": {
-
-    }
+    "contact": {}
   },
   "tags": [],
   "servers": [
@@ -262,6 +281,14 @@
               }
             ]
           },
+          "usd": {
+            "description": "Dólar comercial",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
           "rentabilidadeCdb": {
             "type": "number",
             "description": "CDB/RDB percentual CDI"
@@ -278,6 +305,7 @@
           "cdi",
           "selic",
           "poupanca",
+          "usd",
           "rentabilidadeCdb",
           "rentabilidadeLcx"
         ]
@@ -442,7 +470,7 @@
           "category"
         ]
       },
-      "CreateInvestmentDtoResult": {
+      "CreateInvestmentResultDto": {
         "type": "object",
         "properties": {
           "type": {
@@ -489,6 +517,16 @@
           "id": {
             "type": "number",
             "description": "ID"
+          },
+          "daysUntilMaturity": {
+            "type": "number",
+            "description": "Dias até o vencimento a partir da data atual",
+            "example": 100
+          },
+          "monthsUntilMaturity": {
+            "type": "number",
+            "description": "Meses até o vencimento a partir da data atual",
+            "example": 100
           }
         },
         "required": [
@@ -497,7 +535,9 @@
           "maturity",
           "profitability",
           "profitabilityType",
-          "id"
+          "id",
+          "daysUntilMaturity",
+          "monthsUntilMaturity"
         ]
       },
       "CreateInvestmentDto": {
@@ -551,6 +591,28 @@
           "maturity",
           "profitability",
           "profitabilityType"
+        ]
+      },
+      "RealTimeResponse": {
+        "type": "object",
+        "properties": {
+          "fees": {
+            "description": "Conjunto de taxas e índices financeiros",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Fees"
+              }
+            ]
+          },
+          "today": {
+            "type": "string",
+            "description": "Data atual",
+            "example": "18/06/2024"
+          }
+        },
+        "required": [
+          "fees",
+          "today"
         ]
       }
     }

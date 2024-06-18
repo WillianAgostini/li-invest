@@ -11,7 +11,7 @@ export class RealTimeController {
 
   @Get()
   @ApiResponse({ status: 200, type: RealTimeResponse })
-  async getFees(): Promise<RealTimeResponse> {
+  async get(): Promise<RealTimeResponse> {
     return {
       fees: await this.simulationService.getFees(),
       today: moment().format('DD/MM/YYYY'),
