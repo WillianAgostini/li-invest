@@ -1,27 +1,6 @@
 {
   "openapi": "3.1.0",
   "paths": {
-    "/simulation/getFees": {
-      "get": {
-        "operationId": "SimulationController_getFees",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Fees"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "simulation"
-        ]
-      }
-    },
     "/simulation": {
       "post": {
         "operationId": "SimulationController_simulate",
@@ -213,103 +192,6 @@
   ],
   "components": {
     "schemas": {
-      "DetailedValues": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "number",
-            "description": "Valor em %"
-          },
-          "updatedAt": {
-            "type": "string",
-            "description": "Data de atualização"
-          }
-        },
-        "required": [
-          "value",
-          "updatedAt"
-        ]
-      },
-      "Fees": {
-        "type": "object",
-        "properties": {
-          "di": {
-            "description": "Taxa DI (a.a) %",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DetailedValues"
-              }
-            ]
-          },
-          "tr": {
-            "description": "Taxa Referencial (a.m.) %",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DetailedValues"
-              }
-            ]
-          },
-          "ipca": {
-            "description": "IPCA (a.a.) %",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DetailedValues"
-              }
-            ]
-          },
-          "cdi": {
-            "description": "CDI (a.a.) %",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DetailedValues"
-              }
-            ]
-          },
-          "selic": {
-            "description": "SELIC (a.a.) %",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DetailedValues"
-              }
-            ]
-          },
-          "poupanca": {
-            "description": "Rentabilidade da Poupança (a.m.) %",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DetailedValues"
-              }
-            ]
-          },
-          "usd": {
-            "description": "Dólar comercial",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DetailedValues"
-              }
-            ]
-          },
-          "rentabilidadeCdb": {
-            "type": "number",
-            "description": "CDB/RDB percentual CDI"
-          },
-          "rentabilidadeLcx": {
-            "type": "number",
-            "description": "LCI/LCA percentual CDI"
-          }
-        },
-        "required": [
-          "di",
-          "tr",
-          "ipca",
-          "cdi",
-          "selic",
-          "poupanca",
-          "usd",
-          "rentabilidadeCdb",
-          "rentabilidadeLcx"
-        ]
-      },
       "SimulateDto": {
         "type": "object",
         "properties": {
@@ -591,6 +473,103 @@
           "maturity",
           "profitability",
           "profitabilityType"
+        ]
+      },
+      "DetailedValues": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "description": "Valor em %"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Data de atualização"
+          }
+        },
+        "required": [
+          "value",
+          "updatedAt"
+        ]
+      },
+      "Fees": {
+        "type": "object",
+        "properties": {
+          "di": {
+            "description": "Taxa DI (a.a) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "tr": {
+            "description": "Taxa Referencial (a.m.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "ipca": {
+            "description": "IPCA (a.a.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "cdi": {
+            "description": "CDI (a.a.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "selic": {
+            "description": "SELIC (a.a.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "poupanca": {
+            "description": "Rentabilidade da Poupança (a.m.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "usd": {
+            "description": "Dólar comercial",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "rentabilidadeCdb": {
+            "type": "number",
+            "description": "CDB/RDB percentual CDI"
+          },
+          "rentabilidadeLcx": {
+            "type": "number",
+            "description": "LCI/LCA percentual CDI"
+          }
+        },
+        "required": [
+          "di",
+          "tr",
+          "ipca",
+          "cdi",
+          "selic",
+          "poupanca",
+          "usd",
+          "rentabilidadeCdb",
+          "rentabilidadeLcx"
         ]
       },
       "RealTimeResponse": {
