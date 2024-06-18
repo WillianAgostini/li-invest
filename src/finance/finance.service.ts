@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { clone, isNullOrUndefined } from 'src/utils/util';
 import { FeeService } from './fee/fee.service';
 import { FinancialRateService } from './financial-rate/financial-rate.service';
@@ -24,35 +24,53 @@ export class FinanceService {
 
   async simulate(simulate: Simulate) {
     const fees = await this.getCurrentFees();
+    const response = {
+      investedAmount: simulate.amount,
+      periodInMonths: simulate.months,
+    };
 
     if (simulate.productObject?.id && simulate.productObject.profitabilityType == 'CDI') {
+      if (simulate.days > simulate.productObject.getDaysUntilMaturity() + 31) {
+        throw new BadRequestException('Data da simulação não pode ser maior que a data final do investimento');
+      }
+
       if (simulate.productObject.type == 'CDB') {
         const rentabilidadeCdb = Number(simulate.productObject.profitability);
         return {
-          investedAmount: simulate.amount,
-          periodInMonths: simulate.months,
+          ...response,
           cdb: getCDBResult(simulate.amount, fees.di.value, rentabilidadeCdb, simulate.days),
         } as SimulateResult;
       }
       if (simulate.productObject.type == 'LCI' || simulate.productObject.type == 'LCA') {
         const rentabilidadeLcx = Number(simulate.productObject.profitability);
         return {
-          investedAmount: simulate.amount,
-          periodInMonths: simulate.months,
+          ...response,
           lcx: getLcxResult(simulate.amount, fees.di.value, rentabilidadeLcx, simulate.days),
         } as SimulateResult;
       }
+
+      throw new BadRequestException('Esse investimento não pode ser simulado ainda');
     }
 
-    const cdb = getCDBResult(simulate.amount, fees.di.value, simulate.cdb ?? fees.rentabilidadeCdb, simulate.days);
-    const lcx = getLcxResult(simulate.amount, fees.di.value, simulate.lcx ?? fees.rentabilidadeLcx, simulate.days);
-    const poupanca = getPoupancaResult(simulate.amount, fees.poupanca.value, simulate.days);
+    if (!isNullOrUndefined(simulate.cdb) && isNullOrUndefined(simulate.lcx)) {
+      return {
+        ...response,
+        cdb: getCDBResult(simulate.amount, fees.di.value, simulate.cdb, simulate.days),
+      } as SimulateResult;
+    }
+
+    if (isNullOrUndefined(simulate.cdb) && !isNullOrUndefined(simulate.lcx)) {
+      return {
+        ...response,
+        lcx: getLcxResult(simulate.amount, fees.di.value, simulate.lcx, simulate.days),
+      } as SimulateResult;
+    }
+
     return {
-      investedAmount: simulate.amount,
-      periodInMonths: simulate.months,
-      cdb,
-      lcx,
-      poupanca,
+      ...response,
+      poupanca: getPoupancaResult(simulate.amount, fees.poupanca.value, simulate.days),
+      cdb: getCDBResult(simulate.amount, fees.di.value, simulate.cdb ?? fees.rentabilidadeCdb, simulate.days),
+      lcx: getLcxResult(simulate.amount, fees.di.value, simulate.lcx ?? fees.rentabilidadeLcx, simulate.days),
     } as SimulateResult;
   }
 
@@ -70,9 +88,9 @@ export class FinanceService {
       this.validateIsNull(fees);
       this.cache = fees;
     }
-    this.cache.rentabilidadeCdb = parseInt(process.env.RENTABILIDADE_CDB) || 100;
-    this.cache.rentabilidadeLcx = parseInt(process.env.RENTABILIDADE_LCX) || 100;
 
+    this.cache.rentabilidadeCdb = parseFloat(process.env.RENTABILIDADE_CDB) || 100;
+    this.cache.rentabilidadeLcx = parseFloat(process.env.RENTABILIDADE_LCX) || 100;
     return clone(this.cache);
   }
 

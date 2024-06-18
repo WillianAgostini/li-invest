@@ -14,11 +14,7 @@ export class FeedbackController {
   @ApiBody({ type: NewFeedbackDto })
   @ApiResponse({ status: 201 })
   async simulate(@Body() newFeedbackDto: NewFeedbackDto): Promise<void> {
-    try {
-      this.logger.debug(newFeedbackDto, 'newSimulateDto');
-      await this.feedbackService.insert(newFeedbackDto);
-    } catch (error) {
-      throw new Error('exception ' + error?.message);
-    }
+    this.logger.debug(newFeedbackDto, 'newSimulateDto');
+    await this.feedbackService.insert(newFeedbackDto);
   }
 }

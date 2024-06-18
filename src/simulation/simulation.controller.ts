@@ -15,22 +15,14 @@ export class SimulationController {
   @Get('getFees')
   @ApiResponse({ status: 200, type: Fees })
   async getFees(): Promise<Fees> {
-    try {
-      return await this.simulationService.getFees();
-    } catch (error) {
-      throw new Error('exception ' + error?.message);
-    }
+    return await this.simulationService.getFees();
   }
 
   @Post()
   @ApiBody({ type: SimulateDto })
   @ApiResponse({ status: 201, type: SimulateResult })
   async simulate(@Body() simulateDto: SimulateDto): Promise<SimulateResult> {
-    try {
-      this.logger.debug(simulateDto, 'SimulateDto');
-      return await this.simulationService.simulate(simulateDto);
-    } catch (error) {
-      throw new Error('exception ' + error?.message);
-    }
+    this.logger.debug(simulateDto, 'SimulateDto');
+    return await this.simulationService.simulate(simulateDto);
   }
 }

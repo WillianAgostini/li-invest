@@ -1,6 +1,7 @@
 import { Entity, PrimaryColumn, Column, UpdateDateColumn } from 'typeorm';
 import moment from 'moment';
 import { DetailedValues } from '../interface/fees';
+import { DateTransformer } from 'src/transformer/date-transformer';
 
 @Entity({ name: 'financial_rates' })
 export class FinancialRate {
@@ -13,7 +14,7 @@ export class FinancialRate {
   @Column({ type: 'varchar', nullable: false, name: 'updated_at' })
   updatedAt: string;
 
-  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: false, name: 'updated_at_db' })
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: false, name: 'updated_at_db', transformer: new DateTransformer() })
   updatedAtDb: Date;
 
   toDetailedValues(): DetailedValues {

@@ -13,33 +13,21 @@ export class InvestmentController {
   @Get()
   @ApiResponse({ status: 200, type: [CreateInvestmentDtoResult] })
   async get() {
-    try {
-      return await this.investmentService.getAll();
-    } catch (error) {
-      throw new Error('exception ' + error?.message);
-    }
+    return await this.investmentService.getAll();
   }
 
   @Post()
   @ApiBody({ type: CreateInvestmentDto })
   @ApiResponse({ status: 201 })
   async post(@Body() createInvestmentDto: CreateInvestmentDto): Promise<void> {
-    try {
-      this.logger.debug(createInvestmentDto, 'createInvestmentDto');
-      await this.investmentService.insert(createInvestmentDto);
-    } catch (error) {
-      throw new Error('exception ' + error?.message);
-    }
+    this.logger.debug(createInvestmentDto, 'createInvestmentDto');
+    await this.investmentService.insert(createInvestmentDto);
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204 })
   @ApiResponse({ status: 404 })
   async delete(@Param('id') id: number): Promise<void> {
-    try {
-      await this.investmentService.delete(id);
-    } catch (error) {
-      throw new Error('exception ' + error?.message);
-    }
+    await this.investmentService.delete(id);
   }
 }
