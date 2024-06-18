@@ -1,18 +1,19 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import dotenv from 'dotenv';
+import { AuthGuard } from './auth/auth.guard';
+import { Feedback } from './feedback/entity/feedback';
 import { FeedbackController } from './feedback/feedback.controller';
 import { FeedbackService } from './feedback/feedback.service';
-import { FinanceModule } from './finance/finance.module';
-import { SimulationController } from './simulation/simulation.controller';
-import { SimulationService } from './simulation/simulation.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Feedback } from './feedback/entity/feedback';
-import dotenv from 'dotenv';
 import { FinancialRate } from './finance/entity/financial-rate';
+import { FinanceModule } from './finance/finance.module';
+import { Investment } from './investment/entity/investment';
 import { InvestmentController } from './investment/investment.controller';
 import { InvestmentService } from './investment/investment.service';
-import { Investment } from './investment/entity/investment';
-import { AuthGuard } from './auth/auth.guard';
-import { APP_GUARD } from '@nestjs/core';
+import { RegulationsController } from './regulations/regulations.controller';
+import { SimulationController } from './simulation/simulation.controller';
+import { SimulationService } from './simulation/simulation.service';
 dotenv.config();
 
 @Module({
@@ -30,7 +31,7 @@ dotenv.config();
     TypeOrmModule.forFeature([Feedback, FinancialRate, Investment]),
     FinanceModule,
   ],
-  controllers: [SimulationController, FeedbackController, InvestmentController],
+  controllers: [SimulationController, FeedbackController, InvestmentController, RegulationsController],
   providers: [
     {
       provide: APP_GUARD,
