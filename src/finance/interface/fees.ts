@@ -52,6 +52,12 @@ export class Fees {
   poupanca: DetailedValues;
 
   @ApiProperty({
+    description: 'Dólar comercial',
+    type: DetailedValues,
+  })
+  usd: DetailedValues;
+
+  @ApiProperty({
     description: 'CDB/RDB percentual CDI',
     type: Number,
   })

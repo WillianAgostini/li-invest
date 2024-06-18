@@ -31,7 +31,7 @@ export class FinanceService {
     };
 
     if (simulate.productObject?.id && simulate.productObject.profitabilityType == 'CDI') {
-      if (simulate.days > simulate.productObject.getDaysUntilMaturity() + 31) {
+      if (simulate.months > simulate.productObject.getMonthsUntilMaturity() + 1) {
         throw new BadRequestException('Data da simulação não pode ser maior que a data final do investimento');
       }
 
@@ -98,14 +98,15 @@ export class FinanceService {
   private async fetchAndUpdateRates() {
     this.logger.debug('fetchAndUpdateRates');
     // eslint-disable-next-line prefer-const
-    let [di, tr, cdi, ipca, selic, poupanca, financialRate] = await Promise.all([
+    let [financialRate, di, tr, cdi, ipca, selic, poupanca, usd] = await Promise.all([
+      this.financialRateService.findAll(),
       this.feeService.getSelicOver(),
       this.feeService.getTr(),
       this.feeService.getCdi(),
       this.feeService.getIpca(),
       this.feeService.getSelicMeta(),
       this.feeService.getPoupanca(),
-      this.financialRateService.findAll(),
+      this.feeService.getDolar(),
     ]);
 
     const promisesInsert: Promise<any>[] = [];
@@ -181,6 +182,18 @@ export class FinanceService {
       );
     }
 
+    if (isNullOrUndefined(usd.value)) {
+      usd = financialRate.usd?.toDetailedValues();
+    } else {
+      promisesInsert.push(
+        this.financialRateService.insertOrUpdate({
+          rate_type: 'usd',
+          value: usd.value,
+          updatedAt: usd.updatedAt,
+        }),
+      );
+    }
+
     await Promise.all(promisesInsert);
     return {
       cdi,
@@ -189,18 +202,13 @@ export class FinanceService {
       poupanca,
       selic,
       tr,
+      usd,
     } as Fees;
   }
 
   private validateIsNull(fees: Fees) {
-    if (
-      isNullOrUndefined(fees?.cdi?.value) ||
-      isNullOrUndefined(fees?.di?.value) ||
-      isNullOrUndefined(fees?.ipca?.value) ||
-      isNullOrUndefined(fees?.poupanca?.value) ||
-      isNullOrUndefined(fees?.selic?.value) ||
-      isNullOrUndefined(fees?.tr?.value)
-    ) {
+    const hasNullOrUndefinedValues = Object.values(fees).find((x) => isNullOrUndefined(x));
+    if (hasNullOrUndefinedValues) {
       throw new Error('failed to search fees');
     }
   }

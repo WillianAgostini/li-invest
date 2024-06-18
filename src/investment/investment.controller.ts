@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Logger, Param, Post } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateInvestmentDto, CreateInvestmentDtoResult } from './dto/create-investment-dto';
+import { CreateInvestmentDto, CreateInvestmentResultDto } from './dto/create-investment-dto';
 import { InvestmentService } from './investment.service';
 
 @ApiTags('investment')
@@ -11,9 +11,9 @@ export class InvestmentController {
   constructor(private investmentService: InvestmentService) {}
 
   @Get()
-  @ApiResponse({ status: 200, type: [CreateInvestmentDtoResult] })
+  @ApiResponse({ status: 200, type: [CreateInvestmentResultDto] })
   async get() {
-    return await this.investmentService.getAll();
+    return await this.investmentService.getAllMapped();
   }
 
   @Post()

@@ -19,6 +19,7 @@ export class FinancialRateService {
       poupanca: financialRate?.find((x) => x.rate_type == 'poupanca'),
       selic: financialRate?.find((x) => x.rate_type == 'selic'),
       tr: financialRate?.find((x) => x.rate_type == 'tr'),
+      usd: financialRate?.find((x) => x.rate_type == 'usd'),
     };
   }
 

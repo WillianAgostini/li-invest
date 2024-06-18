@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { DateTransformer } from 'src/transformer/date-transformer';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
@@ -22,8 +23,15 @@ export class Investment {
   maturity: Date;
 
   getDaysUntilMaturity(): number {
-    const differenceInTime = this.maturity.getTime() - new Date().getTime();
-    return Math.ceil(differenceInTime / (1000 * 3600 * 24));
+    const now = moment();
+    const maturity = moment(this.maturity);
+    return maturity.diff(now, 'days');
+  }
+
+  getMonthsUntilMaturity(): number {
+    const now = moment();
+    const maturity = moment(this.maturity);
+    return maturity.diff(now, 'months');
   }
 
   @Column({ type: 'decimal', nullable: false })

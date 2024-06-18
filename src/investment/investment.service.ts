@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateInvestmentDto, CreateInvestmentDtoResult } from './dto/create-investment-dto';
+import { CreateInvestmentDto } from './dto/create-investment-dto';
 import { InsertResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Investment } from './entity/investment';
+import { InvestmentMapper } from './mapper/investment.mapper';
 
 @Injectable()
 export class InvestmentService {
@@ -17,7 +18,15 @@ export class InvestmentService {
   }
 
   async getAll() {
-    return this.investmentRepository.find() as Promise<CreateInvestmentDtoResult[]>;
+    return this.investmentRepository.find();
+  }
+
+  async getByIdMapped(id: number) {
+    return InvestmentMapper.toCreateInvestmentResultDto(await this.investmentRepository.findOneBy({ id }));
+  }
+
+  async getAllMapped() {
+    return InvestmentMapper.toCreateInvestmentResultDtoArray(await this.investmentRepository.find());
   }
 
   async insert(createInvestmentDto: CreateInvestmentDto): Promise<InsertResult> {

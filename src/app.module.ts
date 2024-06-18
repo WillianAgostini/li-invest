@@ -11,6 +11,7 @@ import { FinanceModule } from './finance/finance.module';
 import { Investment } from './investment/entity/investment';
 import { InvestmentController } from './investment/investment.controller';
 import { InvestmentService } from './investment/investment.service';
+import { RealTimeController } from './real-time/real-time.controller';
 import { RegulationsController } from './regulations/regulations.controller';
 import { SimulationController } from './simulation/simulation.controller';
 import { SimulationService } from './simulation/simulation.service';
@@ -31,7 +32,7 @@ dotenv.config();
     TypeOrmModule.forFeature([Feedback, FinancialRate, Investment]),
     FinanceModule,
   ],
-  controllers: [SimulationController, FeedbackController, InvestmentController, RegulationsController],
+  controllers: [SimulationController, FeedbackController, InvestmentController, RegulationsController, RealTimeController],
   providers: [
     {
       provide: APP_GUARD,

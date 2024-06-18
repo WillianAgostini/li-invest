@@ -1,0 +1,558 @@
+{
+  "openapi": "3.1.0",
+  "paths": {
+    "/simulation/getFees": {
+      "get": {
+        "operationId": "SimulationController_getFees",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Fees"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "simulation"
+        ]
+      }
+    },
+    "/simulation": {
+      "post": {
+        "operationId": "SimulationController_simulate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulateResult"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "simulation"
+        ]
+      }
+    },
+    "/feedback": {
+      "post": {
+        "operationId": "FeedbackController_simulate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewFeedbackDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "feedback"
+        ]
+      }
+    },
+    "/investment": {
+      "get": {
+        "operationId": "InvestmentController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateInvestmentDtoResult"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "investment"
+        ]
+      },
+      "post": {
+        "operationId": "InvestmentController_post",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInvestmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "investment"
+        ]
+      }
+    },
+    "/investment/{id}": {
+      "delete": {
+        "operationId": "InvestmentController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "investment"
+        ]
+      }
+    },
+    "/regulations/privacyPolicies": {
+      "get": {
+        "operationId": "RegulationsController_getPrivacyPolicies",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "regulations"
+        ]
+      }
+    },
+    "/regulations/termsAndConditions": {
+      "get": {
+        "operationId": "RegulationsController_getTermsAndConditions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "regulations"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Investment Advisor",
+    "description": "Assists in choosing fixed-income investments: CDB, RDB, LCI, LCA, and Savings Account.",
+    "version": "1.0",
+    "contact": {
+
+    }
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "https://li-invest.koyeb.app"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "DetailedValues": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "description": "Valor em %"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Data de atualização"
+          }
+        },
+        "required": [
+          "value",
+          "updatedAt"
+        ]
+      },
+      "Fees": {
+        "type": "object",
+        "properties": {
+          "di": {
+            "description": "Taxa DI (a.a) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "tr": {
+            "description": "Taxa Referencial (a.m.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "ipca": {
+            "description": "IPCA (a.a.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "cdi": {
+            "description": "CDI (a.a.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "selic": {
+            "description": "SELIC (a.a.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "poupanca": {
+            "description": "Rentabilidade da Poupança (a.m.) %",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DetailedValues"
+              }
+            ]
+          },
+          "rentabilidadeCdb": {
+            "type": "number",
+            "description": "CDB/RDB percentual CDI"
+          },
+          "rentabilidadeLcx": {
+            "type": "number",
+            "description": "LCI/LCA percentual CDI"
+          }
+        },
+        "required": [
+          "di",
+          "tr",
+          "ipca",
+          "cdi",
+          "selic",
+          "poupanca",
+          "rentabilidadeCdb",
+          "rentabilidadeLcx"
+        ]
+      },
+      "SimulateDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Valor do investimento",
+            "example": 1000
+          },
+          "months": {
+            "type": "number",
+            "description": "Meses de investimento",
+            "example": 12
+          },
+          "cdb": {
+            "type": "number",
+            "description": "CDB/RDB percentual CDI",
+            "example": 100,
+            "default": 100
+          },
+          "lcx": {
+            "type": "number",
+            "description": "LCI/LCA percentual CDI",
+            "example": 100,
+            "default": 100
+          },
+          "productId": {
+            "type": "number",
+            "description": "Código do Produto de Investimento cadastrado pela Comunidade"
+          }
+        },
+        "required": [
+          "amount",
+          "months"
+        ]
+      },
+      "CdbResult": {
+        "type": "object",
+        "properties": {
+          "totalProfit": {
+            "type": "number",
+            "description": "Rendimento Líquido"
+          },
+          "totalAmount": {
+            "type": "number",
+            "description": "Valor Total Líquido"
+          },
+          "taxAmount": {
+            "type": "number",
+            "description": "Valor total IOF"
+          },
+          "taxPercentage": {
+            "type": "number",
+            "description": "Taxa IOF"
+          },
+          "iofAmount": {
+            "type": "number",
+            "description": "Imposto de Renda"
+          },
+          "cdi": {
+            "type": "number",
+            "description": "CDI (a.a.) %"
+          },
+          "profitability": {
+            "type": "number",
+            "description": "CDB/RDB percentual CDI"
+          }
+        },
+        "required": [
+          "totalProfit",
+          "totalAmount",
+          "taxAmount",
+          "taxPercentage",
+          "iofAmount",
+          "cdi",
+          "profitability"
+        ]
+      },
+      "InvestmentData": {
+        "type": "object",
+        "properties": {
+          "totalProfit": {
+            "type": "number",
+            "description": "Rendimento Líquido"
+          },
+          "totalAmount": {
+            "type": "number",
+            "description": "Valor Total Líquido"
+          }
+        },
+        "required": [
+          "totalProfit",
+          "totalAmount"
+        ]
+      },
+      "SimulateResult": {
+        "type": "object",
+        "properties": {
+          "investedAmount": {
+            "type": "number",
+            "description": "Valor Investido"
+          },
+          "periodInMonths": {
+            "type": "number",
+            "description": "Meses de investimento"
+          },
+          "cdb": {
+            "description": "CDB/RDB",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CdbResult"
+              }
+            ]
+          },
+          "lcx": {
+            "description": "LCI / LCA",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvestmentData"
+              }
+            ]
+          },
+          "poupanca": {
+            "description": "Poupança",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvestmentData"
+              }
+            ]
+          }
+        },
+        "required": [
+          "investedAmount",
+          "periodInMonths",
+          "cdb",
+          "lcx",
+          "poupanca"
+        ]
+      },
+      "NewFeedbackDto": {
+        "type": "object",
+        "properties": {
+          "conversation": {
+            "type": "string",
+            "description": "Resumo atual do ChatGPT"
+          },
+          "userComment": {
+            "type": "string",
+            "description": "Descrição do problema ou sugestão de melhoria fornecida pelo usuário"
+          },
+          "category": {
+            "type": "string",
+            "description": "Categoria do feedback gerada pelo ChatGPT com base na descrição em userComment"
+          }
+        },
+        "required": [
+          "conversation",
+          "userComment",
+          "category"
+        ]
+      },
+      "CreateInvestmentDtoResult": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Tipo da aplicação",
+            "examples": [
+              "LCA",
+              "LCI",
+              "CDB"
+            ]
+          },
+          "issuer": {
+            "type": "string",
+            "description": "Emissor",
+            "example": "Banco Itaú"
+          },
+          "originBank": {
+            "type": "string",
+            "description": "Banco que disponibiliza o investimento",
+            "example": "Itaú"
+          },
+          "minimumApplication": {
+            "type": "number",
+            "description": "Aplicação Mínima",
+            "example": 100
+          },
+          "maturity": {
+            "type": "string",
+            "description": "Vencimento",
+            "example": "2025-12-31",
+            "format": "date"
+          },
+          "profitability": {
+            "type": "number",
+            "description": "Rentabilidade",
+            "example": 100
+          },
+          "profitabilityType": {
+            "type": "string",
+            "description": "Rentabilidade do",
+            "example": "CDI",
+            "default": "CDI"
+          },
+          "id": {
+            "type": "number",
+            "description": "ID"
+          }
+        },
+        "required": [
+          "originBank",
+          "minimumApplication",
+          "maturity",
+          "profitability",
+          "profitabilityType",
+          "id"
+        ]
+      },
+      "CreateInvestmentDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Tipo da aplicação",
+            "examples": [
+              "LCA",
+              "LCI",
+              "CDB"
+            ]
+          },
+          "issuer": {
+            "type": "string",
+            "description": "Emissor",
+            "example": "Banco Itaú"
+          },
+          "originBank": {
+            "type": "string",
+            "description": "Banco que disponibiliza o investimento",
+            "example": "Itaú"
+          },
+          "minimumApplication": {
+            "type": "number",
+            "description": "Aplicação Mínima",
+            "example": 100
+          },
+          "maturity": {
+            "type": "string",
+            "description": "Vencimento",
+            "example": "2025-12-31",
+            "format": "date"
+          },
+          "profitability": {
+            "type": "number",
+            "description": "Rentabilidade",
+            "example": 100
+          },
+          "profitabilityType": {
+            "type": "string",
+            "description": "Rentabilidade do",
+            "example": "CDI",
+            "default": "CDI"
+          }
+        },
+        "required": [
+          "originBank",
+          "minimumApplication",
+          "maturity",
+          "profitability",
+          "profitabilityType"
+        ]
+      }
+    }
+  }
+}

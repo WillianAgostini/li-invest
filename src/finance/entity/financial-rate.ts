@@ -6,7 +6,7 @@ import { DateTransformer } from 'src/transformer/date-transformer';
 @Entity({ name: 'financial_rates' })
 export class FinancialRate {
   @PrimaryColumn({ type: 'varchar', length: 20, nullable: false })
-  rate_type: 'cdi' | 'di' | 'ipca' | 'poupanca' | 'selic' | 'tr';
+  rate_type: 'cdi' | 'di' | 'ipca' | 'poupanca' | 'selic' | 'tr' | 'usd';
 
   @Column({ type: 'numeric', nullable: false })
   value: number;

@@ -64,9 +64,23 @@ export class CreateInvestmentDto {
   profitabilityType: 'CDI';
 }
 
-export class CreateInvestmentDtoResult extends CreateInvestmentDto {
+export class CreateInvestmentResultDto extends CreateInvestmentDto {
   @ApiProperty({
     description: 'ID',
   })
   id: number;
+
+  @ApiProperty({
+    description: 'Dias até o vencimento a partir da data atual',
+    example: 100,
+    type: 'number',
+  })
+  daysUntilMaturity: number;
+
+  @ApiProperty({
+    description: 'Meses até o vencimento a partir da data atual',
+    example: 100,
+    type: 'number',
+  })
+  monthsUntilMaturity: number;
 }
