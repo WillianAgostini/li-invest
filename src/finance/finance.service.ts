@@ -19,7 +19,8 @@ export class FinanceService {
     private feeService: FeeService,
     private financialRateService: FinancialRateService,
   ) {
-    setInterval(this.clearFees, 21600000); // 21.600.000 milissegundos = 6 hours
+    const sixHours = 21600000;
+    setInterval(this.clearFees, sixHours);
   }
 
   async simulate(simulate: Simulate) {
@@ -193,12 +194,12 @@ export class FinanceService {
 
   private validateIsNull(fees: Fees) {
     if (
-      isNullOrUndefined(fees.cdi.value) ||
-      isNullOrUndefined(fees.di.value) ||
-      isNullOrUndefined(fees.ipca.value) ||
-      isNullOrUndefined(fees.poupanca.value) ||
-      isNullOrUndefined(fees.selic.value) ||
-      isNullOrUndefined(fees.tr.value)
+      isNullOrUndefined(fees?.cdi?.value) ||
+      isNullOrUndefined(fees?.di?.value) ||
+      isNullOrUndefined(fees?.ipca?.value) ||
+      isNullOrUndefined(fees?.poupanca?.value) ||
+      isNullOrUndefined(fees?.selic?.value) ||
+      isNullOrUndefined(fees?.tr?.value)
     ) {
       throw new Error('failed to search fees');
     }
