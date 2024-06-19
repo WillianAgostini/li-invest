@@ -19,8 +19,8 @@ export class FinanceService {
     private feeService: FeeService,
     private financialRateService: FinancialRateService,
   ) {
-    const sixHours = 21600000;
-    setInterval(this.clearFees, sixHours);
+    const oneHour = 60 * 60 * 1000;
+    setInterval(this.clearFees, oneHour);
   }
 
   async simulate(simulate: Simulate) {
