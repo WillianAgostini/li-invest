@@ -39,14 +39,14 @@ export class FinanceService {
         const rentabilidadeCdb = Number(simulate.productObject.profitability);
         return {
           ...response,
-          cdb: getCDBResult(simulate.amount, fees.di.value, rentabilidadeCdb, simulate.days),
+          cdb: getCDBResult(simulate.amount, fees.cdi.value, rentabilidadeCdb, simulate.days),
         } as SimulateResult;
       }
       if (simulate.productObject.type == 'LCI' || simulate.productObject.type == 'LCA') {
         const rentabilidadeLcx = Number(simulate.productObject.profitability);
         return {
           ...response,
-          lcx: getLcxResult(simulate.amount, fees.di.value, rentabilidadeLcx, simulate.days),
+          lcx: getLcxResult(simulate.amount, fees.cdi.value, rentabilidadeLcx, simulate.days),
         } as SimulateResult;
       }
 
@@ -56,22 +56,22 @@ export class FinanceService {
     if (!isNullOrUndefined(simulate.cdb) && isNullOrUndefined(simulate.lcx)) {
       return {
         ...response,
-        cdb: getCDBResult(simulate.amount, fees.di.value, simulate.cdb, simulate.days),
+        cdb: getCDBResult(simulate.amount, fees.cdi.value, simulate.cdb, simulate.days),
       } as SimulateResult;
     }
 
     if (isNullOrUndefined(simulate.cdb) && !isNullOrUndefined(simulate.lcx)) {
       return {
         ...response,
-        lcx: getLcxResult(simulate.amount, fees.di.value, simulate.lcx, simulate.days),
+        lcx: getLcxResult(simulate.amount, fees.cdi.value, simulate.lcx, simulate.days),
       } as SimulateResult;
     }
 
     return {
       ...response,
       poupanca: getPoupancaResult(simulate.amount, fees.poupanca.value, simulate.days),
-      cdb: getCDBResult(simulate.amount, fees.di.value, simulate.cdb ?? fees.rentabilidadeCdb, simulate.days),
-      lcx: getLcxResult(simulate.amount, fees.di.value, simulate.lcx ?? fees.rentabilidadeLcx, simulate.days),
+      cdb: getCDBResult(simulate.amount, fees.cdi.value, simulate.cdb ?? fees.rentabilidadeCdb, simulate.days),
+      lcx: getLcxResult(simulate.amount, fees.cdi.value, simulate.lcx ?? fees.rentabilidadeLcx, simulate.days),
     } as SimulateResult;
   }
 
@@ -98,11 +98,10 @@ export class FinanceService {
   private async fetchAndUpdateRates() {
     this.logger.debug('fetchAndUpdateRates');
     // eslint-disable-next-line prefer-const
-    let [financialRate, di, tr, cdi, ipca, selic, poupanca, usd] = await Promise.all([
+    let [financialRate, tr, cdi, ipca, selic, poupanca, usd] = await Promise.all([
       this.financialRateService.findAll(),
-      this.feeService.getSelicOver(),
       this.feeService.getTr(),
-      this.feeService.getCdi(),
+      this.feeService.getSelicOver(),
       this.feeService.getIpca(),
       this.feeService.getSelicMeta(),
       this.feeService.getPoupanca(),
@@ -118,18 +117,6 @@ export class FinanceService {
           rate_type: 'cdi',
           value: cdi.value,
           updatedAt: cdi.updatedAt,
-        }),
-      );
-    }
-
-    if (isNullOrUndefined(di.value)) {
-      di = financialRate.di?.toDetailedValues();
-    } else {
-      promisesInsert.push(
-        this.financialRateService.insertOrUpdate({
-          rate_type: 'di',
-          value: di.value,
-          updatedAt: di.updatedAt,
         }),
       );
     }
@@ -197,7 +184,6 @@ export class FinanceService {
     await Promise.all(promisesInsert);
     return {
       cdi,
-      di,
       ipca,
       poupanca,
       selic,

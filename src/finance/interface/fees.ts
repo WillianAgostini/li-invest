@@ -16,12 +16,6 @@ export class DetailedValues {
 
 export class Fees {
   @ApiProperty({
-    description: 'Taxa DI (a.a) %',
-    type: DetailedValues,
-  })
-  di: DetailedValues;
-
-  @ApiProperty({
     description: 'Taxa Referencial (a.m.) %',
     type: DetailedValues,
   })

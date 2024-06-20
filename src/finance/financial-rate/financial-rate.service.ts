@@ -14,7 +14,6 @@ export class FinancialRateService {
     const financialRate = await this.financialRateRepository.find();
     return {
       cdi: financialRate?.find((x) => x.rate_type == 'cdi'),
-      di: financialRate?.find((x) => x.rate_type == 'di'),
       ipca: financialRate?.find((x) => x.rate_type == 'ipca'),
       poupanca: financialRate?.find((x) => x.rate_type == 'poupanca'),
       selic: financialRate?.find((x) => x.rate_type == 'selic'),

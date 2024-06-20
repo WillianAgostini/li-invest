@@ -1,8 +1,8 @@
 import { CdbResult } from '../interface/simulate-result';
 import * as finance from './finance';
 
-export function getCDBResult(amount: number, di: number, yearlyIndex: number, days: number) {
-  const interestAmount = finance.compoundInterest(amount, getIndexCDB(yearlyIndex, di), days);
+export function getCDBResult(amount: number, cdi: number, yearlyIndex: number, days: number) {
+  const interestAmount = finance.compoundInterest(amount, getIndexCDB(yearlyIndex, cdi), days);
   const taxPercentage = finance.getIndexIR(days);
   const iofAmount = finance.getIOFAmount(days, interestAmount);
   const taxAmount = (interestAmount - iofAmount) * (taxPercentage / 100);
@@ -15,7 +15,7 @@ export function getCDBResult(amount: number, di: number, yearlyIndex: number, da
     taxAmount,
     taxPercentage,
     iofAmount,
-    cdi: di,
+    cdi: cdi,
     profitability: yearlyIndex,
   } as CdbResult;
 }
