@@ -76,23 +76,18 @@ export class FinanceService {
   }
 
   async getCurrentFees() {
-    return this.getAll();
-  }
-
-  private clearFees() {
-    this.cache = undefined;
-  }
-
-  async getAll() {
     if (!this.cache) {
       const fees = await this.fetchAndUpdateRates();
-      this.validateIsNull(fees);
       this.cache = fees;
     }
 
     this.cache.rentabilidadeCdb = parseFloat(process.env.RENTABILIDADE_CDB) || 100;
     this.cache.rentabilidadeLcx = parseFloat(process.env.RENTABILIDADE_LCX) || 100;
     return clone(this.cache);
+  }
+
+  private clearFees() {
+    this.cache = undefined;
   }
 
   private async fetchAndUpdateRates() {
@@ -109,8 +104,8 @@ export class FinanceService {
     ]);
 
     const promisesInsert: Promise<any>[] = [];
-    if (isNullOrUndefined(cdi.value)) {
-      cdi = financialRate.cdi?.toDetailedValues();
+    if (isNullOrUndefined(cdi?.value)) {
+      cdi = financialRate?.cdi?.toDetailedValues();
     } else {
       promisesInsert.push(
         this.financialRateService.insertOrUpdate({
@@ -121,8 +116,8 @@ export class FinanceService {
       );
     }
 
-    if (isNullOrUndefined(ipca.value)) {
-      ipca = financialRate.ipca?.toDetailedValues();
+    if (isNullOrUndefined(ipca?.value)) {
+      ipca = financialRate?.ipca?.toDetailedValues();
     } else {
       promisesInsert.push(
         this.financialRateService.insertOrUpdate({
@@ -133,8 +128,8 @@ export class FinanceService {
       );
     }
 
-    if (isNullOrUndefined(poupanca.value)) {
-      poupanca = financialRate.poupanca?.toDetailedValues();
+    if (isNullOrUndefined(poupanca?.value)) {
+      poupanca = financialRate?.poupanca?.toDetailedValues();
     } else {
       promisesInsert.push(
         this.financialRateService.insertOrUpdate({
@@ -145,8 +140,8 @@ export class FinanceService {
       );
     }
 
-    if (isNullOrUndefined(selic.value)) {
-      selic = financialRate.selic?.toDetailedValues();
+    if (isNullOrUndefined(selic?.value)) {
+      selic = financialRate?.selic?.toDetailedValues();
     } else {
       promisesInsert.push(
         this.financialRateService.insertOrUpdate({
@@ -157,8 +152,8 @@ export class FinanceService {
       );
     }
 
-    if (isNullOrUndefined(tr.value)) {
-      tr = financialRate.tr?.toDetailedValues();
+    if (isNullOrUndefined(tr?.value)) {
+      tr = financialRate?.tr?.toDetailedValues();
     } else {
       promisesInsert.push(
         this.financialRateService.insertOrUpdate({
@@ -169,8 +164,8 @@ export class FinanceService {
       );
     }
 
-    if (isNullOrUndefined(usd.value)) {
-      usd = financialRate.usd?.toDetailedValues();
+    if (isNullOrUndefined(usd?.value)) {
+      usd = financialRate?.usd?.toDetailedValues();
     } else {
       promisesInsert.push(
         this.financialRateService.insertOrUpdate({
@@ -182,7 +177,8 @@ export class FinanceService {
     }
 
     await Promise.all(promisesInsert);
-    return {
+
+    const fees = {
       cdi,
       ipca,
       poupanca,
@@ -190,11 +186,13 @@ export class FinanceService {
       tr,
       usd,
     } as Fees;
+    this.validateIsNull(fees);
+    return fees;
   }
 
   private validateIsNull(fees: Fees) {
-    const hasNullOrUndefinedValues = Object.values(fees).find((x) => isNullOrUndefined(x));
-    if (hasNullOrUndefinedValues) {
+    const hasNullOrUndefinedValues = Object.values(fees).filter((x) => isNullOrUndefined(x?.value));
+    if (hasNullOrUndefinedValues.length) {
       throw new Error('failed to search fees');
     }
   }
