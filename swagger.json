@@ -495,14 +495,6 @@
       "Fees": {
         "type": "object",
         "properties": {
-          "di": {
-            "description": "Taxa DI (a.a) %",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DetailedValues"
-              }
-            ]
-          },
           "tr": {
             "description": "Taxa Referencial (a.m.) %",
             "allOf": [
@@ -561,7 +553,6 @@
           }
         },
         "required": [
-          "di",
           "tr",
           "ipca",
           "cdi",
