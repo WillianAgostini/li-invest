@@ -176,6 +176,20 @@
           "realTime"
         ]
       }
+    },
+    "/realTime/clear": {
+      "post": {
+        "operationId": "RealTimeController_clear",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "realTime"
+        ]
+      }
     }
   },
   "info": {

@@ -96,15 +96,19 @@ export class FinanceService {
 
     const financialRate = await this.financialRateService.findAll();
     const [cdi, ipca, poupanca, selic, tr, usd] = await Promise.all([
-      this.updateRate(RateType.CDI, this.feeService.getSelicOver, financialRate?.cdi),
-      this.updateRate(RateType.IPCA, this.feeService.getIpca, financialRate?.ipca),
-      this.updateRate(RateType.POUPANCA, this.feeService.getPoupanca, financialRate?.poupanca),
-      this.updateRate(RateType.SELIC, this.feeService.getSelicMeta, financialRate?.selic),
-      this.updateRate(RateType.TR, this.feeService.getTr, financialRate?.tr),
-      this.updateRate(RateType.USD, this.feeService.getDolar, financialRate?.usd),
+      this.updateRate(RateType.CDI, this.feeService.getSelicOver.bind(this.feeService), financialRate?.cdi),
+      this.updateRate(RateType.IPCA, this.feeService.getIpca.bind(this.feeService), financialRate?.ipca),
+      this.updateRate(RateType.POUPANCA, this.feeService.getPoupanca.bind(this.feeService), financialRate?.poupanca),
+      this.updateRate(RateType.SELIC, this.feeService.getSelicMeta.bind(this.feeService), financialRate?.selic),
+      this.updateRate(RateType.TR, this.feeService.getTr.bind(this.feeService), financialRate?.tr),
+      this.updateRate(RateType.USD, this.feeService.getDolar.bind(this.feeService), financialRate?.usd),
     ]);
 
-    const fees = {
+    if (isNullOrUndefined(cdi?.value) || isNullOrUndefined(poupanca?.value)) {
+      throw new Error('failed to search fees');
+    }
+
+    return {
       cdi,
       ipca,
       poupanca,
@@ -112,29 +116,26 @@ export class FinanceService {
       tr,
       usd,
     } as Fees;
-
-    this.validateIsNull(fees);
-    return fees;
   }
 
-  async updateRate(rateType: RateType, rateServiceMethod: () => Promise<DetailedValues>, financialRateProperty: any) {
-    const rate = await rateServiceMethod();
-    if (isNullOrUndefined(rate?.value)) {
-      return financialRateProperty?.toDetailedValues();
-    }
+  async updateRate(rateType: RateType, rateServiceMethod: () => Promise<DetailedValues>, financialRateProperty: any): Promise<DetailedValues | undefined> {
+    try {
+      const rate = await rateServiceMethod();
+      if (isNullOrUndefined(rate?.value) || isNaN(rate?.value)) {
+        this.logger.debug(`using cache for ${rateType}`);
+        return financialRateProperty?.toDetailedValues();
+      }
 
-    await this.financialRateService.insertOrUpdate({
-      rate_type: rateType,
-      value: rate.value,
-      updatedAt: rate.updatedAt,
-    });
-    return rate;
-  }
-
-  private validateIsNull(fees: Fees) {
-    const hasNullOrUndefinedValues = Object.values(fees).filter((x) => isNullOrUndefined(x?.value));
-    if (hasNullOrUndefinedValues.length) {
-      throw new Error('failed to search fees');
+      await this.financialRateService.insertOrUpdate({
+        rate_type: rateType,
+        value: rate.value,
+        updatedAt: rate.updatedAt,
+      });
+      return rate;
+    } catch (error) {
+      this.logger.error(`rateType: ${rateType}`);
+      this.logger.error(error);
+      return;
     }
   }
 }
