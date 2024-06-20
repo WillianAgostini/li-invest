@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SimulationService } from 'src/simulation/simulation.service';
 import { RealTimeResponse } from './interface/real-time-response';
@@ -16,5 +16,11 @@ export class RealTimeController {
       fees: await this.simulationService.getFees(),
       today: moment().format('DD/MM/YYYY'),
     } as RealTimeResponse;
+  }
+
+  @Post('clear')
+  @ApiResponse({ status: 204 })
+  async clear() {
+    this.simulationService.clear();
   }
 }

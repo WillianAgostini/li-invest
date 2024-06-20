@@ -2,12 +2,13 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { clone, isNullOrUndefined } from 'src/utils/util';
 import { FeeService } from './fee/fee.service';
 import { FinancialRateService } from './financial-rate/financial-rate.service';
-import { Fees } from './interface/fees';
+import { DetailedValues, Fees } from './interface/fees';
 import { Simulate } from './interface/simulate';
 import { SimulateResult } from './interface/simulate-result';
 import { getCDBResult } from './investment/cdb';
 import { getLcxResult } from './investment/lcx';
 import { getPoupancaResult } from './investment/poupanca';
+import { RateType } from './entity/financial-rate';
 
 @Injectable()
 export class FinanceService {
@@ -21,6 +22,10 @@ export class FinanceService {
   ) {
     const oneHour = 60 * 60 * 1000;
     setInterval(this.clearFees, oneHour);
+  }
+
+  clearFees() {
+    this.cache = undefined;
   }
 
   async simulate(simulate: Simulate) {
@@ -86,97 +91,18 @@ export class FinanceService {
     return clone(this.cache);
   }
 
-  private clearFees() {
-    this.cache = undefined;
-  }
-
   private async fetchAndUpdateRates() {
     this.logger.debug('fetchAndUpdateRates');
-    // eslint-disable-next-line prefer-const
-    let [financialRate, tr, cdi, ipca, selic, poupanca, usd] = await Promise.all([
-      this.financialRateService.findAll(),
-      this.feeService.getTr(),
-      this.feeService.getSelicOver(),
-      this.feeService.getIpca(),
-      this.feeService.getSelicMeta(),
-      this.feeService.getPoupanca(),
-      this.feeService.getDolar(),
+
+    const financialRate = await this.financialRateService.findAll();
+    const [cdi, ipca, poupanca, selic, tr, usd] = await Promise.all([
+      this.updateRate(RateType.CDI, this.feeService.getSelicOver, financialRate?.cdi),
+      this.updateRate(RateType.IPCA, this.feeService.getIpca, financialRate?.ipca),
+      this.updateRate(RateType.POUPANCA, this.feeService.getPoupanca, financialRate?.poupanca),
+      this.updateRate(RateType.SELIC, this.feeService.getSelicMeta, financialRate?.selic),
+      this.updateRate(RateType.TR, this.feeService.getTr, financialRate?.tr),
+      this.updateRate(RateType.USD, this.feeService.getDolar, financialRate?.usd),
     ]);
-
-    const promisesInsert: Promise<any>[] = [];
-    if (isNullOrUndefined(cdi?.value)) {
-      cdi = financialRate?.cdi?.toDetailedValues();
-    } else {
-      promisesInsert.push(
-        this.financialRateService.insertOrUpdate({
-          rate_type: 'cdi',
-          value: cdi.value,
-          updatedAt: cdi.updatedAt,
-        }),
-      );
-    }
-
-    if (isNullOrUndefined(ipca?.value)) {
-      ipca = financialRate?.ipca?.toDetailedValues();
-    } else {
-      promisesInsert.push(
-        this.financialRateService.insertOrUpdate({
-          rate_type: 'ipca',
-          value: ipca.value,
-          updatedAt: ipca.updatedAt,
-        }),
-      );
-    }
-
-    if (isNullOrUndefined(poupanca?.value)) {
-      poupanca = financialRate?.poupanca?.toDetailedValues();
-    } else {
-      promisesInsert.push(
-        this.financialRateService.insertOrUpdate({
-          rate_type: 'poupanca',
-          value: poupanca.value,
-          updatedAt: poupanca.updatedAt,
-        }),
-      );
-    }
-
-    if (isNullOrUndefined(selic?.value)) {
-      selic = financialRate?.selic?.toDetailedValues();
-    } else {
-      promisesInsert.push(
-        this.financialRateService.insertOrUpdate({
-          rate_type: 'selic',
-          value: selic.value,
-          updatedAt: selic.updatedAt,
-        }),
-      );
-    }
-
-    if (isNullOrUndefined(tr?.value)) {
-      tr = financialRate?.tr?.toDetailedValues();
-    } else {
-      promisesInsert.push(
-        this.financialRateService.insertOrUpdate({
-          rate_type: 'tr',
-          value: tr.value,
-          updatedAt: tr.updatedAt,
-        }),
-      );
-    }
-
-    if (isNullOrUndefined(usd?.value)) {
-      usd = financialRate?.usd?.toDetailedValues();
-    } else {
-      promisesInsert.push(
-        this.financialRateService.insertOrUpdate({
-          rate_type: 'usd',
-          value: usd.value,
-          updatedAt: usd.updatedAt,
-        }),
-      );
-    }
-
-    await Promise.all(promisesInsert);
 
     const fees = {
       cdi,
@@ -186,8 +112,23 @@ export class FinanceService {
       tr,
       usd,
     } as Fees;
+
     this.validateIsNull(fees);
     return fees;
+  }
+
+  async updateRate(rateType: RateType, rateServiceMethod: () => Promise<DetailedValues>, financialRateProperty: any) {
+    const rate = await rateServiceMethod();
+    if (isNullOrUndefined(rate?.value)) {
+      return financialRateProperty?.toDetailedValues();
+    }
+
+    await this.financialRateService.insertOrUpdate({
+      rate_type: rateType,
+      value: rate.value,
+      updatedAt: rate.updatedAt,
+    });
+    return rate;
   }
 
   private validateIsNull(fees: Fees) {

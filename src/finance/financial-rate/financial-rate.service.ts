@@ -3,6 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, InsertResult } from 'typeorm';
 import { FinancialRate } from '../entity/financial-rate';
 
+export interface IFinancialRate {
+  cdi: FinancialRate;
+  ipca: FinancialRate;
+  poupanca: FinancialRate;
+  selic: FinancialRate;
+  tr: FinancialRate;
+  usd: FinancialRate;
+}
+
 @Injectable()
 export class FinancialRateService {
   constructor(
@@ -10,7 +19,7 @@ export class FinancialRateService {
     private financialRateRepository: Repository<FinancialRate>,
   ) {}
 
-  async findAll() {
+  async findAll(): Promise<IFinancialRate> {
     const financialRate = await this.financialRateRepository.find();
     return {
       cdi: financialRate?.find((x) => x.rate_type == 'cdi'),

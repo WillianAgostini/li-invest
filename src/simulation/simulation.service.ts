@@ -18,6 +18,10 @@ export class SimulationService {
     return await this.financeService.getCurrentFees();
   }
 
+  clear() {
+    return this.financeService.clearFees();
+  }
+
   async simulate(simulateDto: SimulateDto) {
     let productObject: Investment;
     if (simulateDto.productId) {
