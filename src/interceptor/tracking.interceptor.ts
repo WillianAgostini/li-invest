@@ -24,7 +24,7 @@ export class TrackingInterceptor implements NestInterceptor {
 
   private async getTrackId(request: any) {
     try {
-      const trackId = request.headers['trackId'] || request.params?.trackId || request.body?.trackId;
+      const trackId = request.headers['track-id'] || request.params['track-id'] || request.body['track-id'];
       const entityTrack = await this.trackService.increment(trackId);
       return entityTrack.id;
     } catch (error) {
@@ -43,7 +43,7 @@ export function addTrackIdToResponses(document: OpenAPIObject): OpenAPIObject {
           if (content && content['application/json'] && content['application/json'].schema) {
             content['application/json'].schema.properties = {
               ...content['application/json'].schema.properties,
-              trackId: {
+              ['track-id']: {
                 type: 'string',
                 example: '123',
                 description: 'The track ID associated with the request',
@@ -65,7 +65,7 @@ export function addTrackIdToQueryParams(document: OpenAPIObject): OpenAPIObject 
       }
 
       operation.parameters.push({
-        name: 'trackId',
+        name: 'track-id',
         in: 'query',
         required: false,
         schema: {

@@ -10,7 +10,7 @@ export class TrackService {
     private trackRepository: Repository<Track>,
   ) {}
 
-  async increment(id: number): Promise<Track> {
+  async increment(id: string): Promise<Track> {
     if (!id) {
       const track = this.createNewTrack();
       return await this.trackRepository.save(track);
@@ -18,7 +18,7 @@ export class TrackService {
 
     let track = await this.trackRepository.findOneBy({ id });
     if (!track) {
-      track = this.createNewTrack();
+      track = this.createNewTrack(id);
     } else {
       track.accessCount += 1;
       track.updatedAt = new Date();
@@ -27,8 +27,9 @@ export class TrackService {
     return await this.trackRepository.save(track);
   }
 
-  private createNewTrack(): Track {
+  private createNewTrack(id?: string): Track {
     return this.trackRepository.create({
+      id,
       accessCount: 1,
       updatedAt: new Date(),
     });

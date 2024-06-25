@@ -3,8 +3,8 @@ import { CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, Col
 
 @Entity('track')
 export class Track {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ name: 'access_count' })
   accessCount: number;
