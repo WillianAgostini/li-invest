@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import dotenv from 'dotenv';
 import { AuthGuard } from './auth/auth.guard';
@@ -16,6 +16,9 @@ import { RealTimeController } from './real-time/real-time.controller';
 import { RegulationsController } from './regulations/regulations.controller';
 import { SimulationController } from './simulation/simulation.controller';
 import { SimulationService } from './simulation/simulation.service';
+import { TrackService } from './track/track.service';
+import { Track } from './track/entity/track';
+import { TrackingInterceptor } from './interceptor/tracking.interceptor';
 dotenv.config();
 
 @Module({
@@ -28,9 +31,9 @@ dotenv.config();
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       ssl: { rejectUnauthorized: false },
-      entities: [Feedback, FinancialRate, Investment],
+      entities: [Feedback, FinancialRate, Investment, Track],
     }),
-    TypeOrmModule.forFeature([Feedback, FinancialRate, Investment]),
+    TypeOrmModule.forFeature([Feedback, FinancialRate, Investment, Track]),
     FinanceModule,
   ],
   controllers: [SimulationController, FeedbackController, InvestmentController, RegulationsController, RealTimeController],
@@ -39,9 +42,14 @@ dotenv.config();
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TrackingInterceptor,
+    },
     SimulationService,
     FeedbackService,
     InvestmentService,
+    TrackService,
   ],
 })
 export class AppModule implements NestModule {
