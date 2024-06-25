@@ -4,7 +4,18 @@
     "/simulation": {
       "post": {
         "operationId": "SimulationController_simulate",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "trackId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123",
+              "description": "The track ID associated with the request"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -21,7 +32,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SimulateResult"
+                  "$ref": "#/components/schemas/SimulateResult",
+                  "properties": {
+                    "trackId": {
+                      "type": "string",
+                      "example": "123",
+                      "description": "The track ID associated with the request"
+                    }
+                  }
                 }
               }
             }
@@ -35,7 +53,18 @@
     "/feedback": {
       "post": {
         "operationId": "FeedbackController_simulate",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "trackId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123",
+              "description": "The track ID associated with the request"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -59,7 +88,18 @@
     "/investment": {
       "get": {
         "operationId": "InvestmentController_get",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "trackId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123",
+              "description": "The track ID associated with the request"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -69,6 +109,13 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/CreateInvestmentResultDto"
+                  },
+                  "properties": {
+                    "trackId": {
+                      "type": "string",
+                      "example": "123",
+                      "description": "The track ID associated with the request"
+                    }
                   }
                 }
               }
@@ -81,7 +128,18 @@
       },
       "post": {
         "operationId": "InvestmentController_post",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "trackId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123",
+              "description": "The track ID associated with the request"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -113,6 +171,16 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "trackId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123",
+              "description": "The track ID associated with the request"
+            }
           }
         ],
         "responses": {
@@ -131,7 +199,18 @@
     "/regulations/privacyPolicies": {
       "get": {
         "operationId": "RegulationsController_getPrivacyPolicies",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "trackId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123",
+              "description": "The track ID associated with the request"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -145,7 +224,18 @@
     "/regulations/termsAndConditions": {
       "get": {
         "operationId": "RegulationsController_getTermsAndConditions",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "trackId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123",
+              "description": "The track ID associated with the request"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -159,14 +249,32 @@
     "/realTime": {
       "get": {
         "operationId": "RealTimeController_get",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "trackId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123",
+              "description": "The track ID associated with the request"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RealTimeResponse"
+                  "$ref": "#/components/schemas/RealTimeResponse",
+                  "properties": {
+                    "trackId": {
+                      "type": "string",
+                      "example": "123",
+                      "description": "The track ID associated with the request"
+                    }
+                  }
                 }
               }
             }
@@ -180,7 +288,18 @@
     "/realTime/clear": {
       "post": {
         "operationId": "RealTimeController_clear",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "trackId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123",
+              "description": "The track ID associated with the request"
+            }
+          }
+        ],
         "responses": {
           "204": {
             "description": ""
