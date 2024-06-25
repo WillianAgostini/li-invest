@@ -11,15 +11,26 @@ export class TrackService {
   ) {}
 
   async increment(id: number): Promise<Track> {
-    let track = await this.trackRepository.findOne({ where: { id } });
-    if (!track) {
-      track = this.trackRepository.create({
-        accessCount: 0,
-      });
+    if (!id) {
+      const track = this.createNewTrack();
+      return await this.trackRepository.save(track);
     }
 
-    track.accessCount += 1;
-    track.updatedAt = new Date();
+    let track = await this.trackRepository.findOneBy({ id });
+    if (!track) {
+      track = this.createNewTrack();
+    } else {
+      track.accessCount += 1;
+      track.updatedAt = new Date();
+    }
+
     return await this.trackRepository.save(track);
+  }
+
+  private createNewTrack(): Track {
+    return this.trackRepository.create({
+      accessCount: 1,
+      updatedAt: new Date(),
+    });
   }
 }
