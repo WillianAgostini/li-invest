@@ -1,26 +1,36 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
 import { OpenAPIObject } from '@nestjs/swagger';
 import { Observable, map } from 'rxjs';
 import { TrackService } from 'src/track/track.service';
 
 @Injectable()
 export class TrackingInterceptor implements NestInterceptor {
+  private readonly logger = new Logger(TrackingInterceptor.name);
+
   constructor(private trackService: TrackService) {}
 
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest();
 
-    const trackId = request.headers['trackId'] || request.params?.trackId || request.body?.trackId;
-
-    const entityTrack = await this.trackService.increment(trackId);
-
+    const trackId = await this.getTrackId(request);
     return next.handle().pipe(
       map((data) => ({
         ...data,
-        trackId: entityTrack.id,
+        trackId,
       })),
     );
+  }
+
+  private async getTrackId(request: any) {
+    try {
+      const trackId = request.headers['trackId'] || request.params?.trackId || request.body?.trackId;
+      const entityTrack = await this.trackService.increment(trackId);
+      return entityTrack.id;
+    } catch (error) {
+      this.logger.error(error);
+      return;
+    }
   }
 }
 
@@ -57,7 +67,7 @@ export function addTrackIdToQueryParams(document: OpenAPIObject): OpenAPIObject 
       operation.parameters.push({
         name: 'trackId',
         in: 'query',
-        required: true,
+        required: false,
         schema: {
           type: 'string',
           example: '123',
