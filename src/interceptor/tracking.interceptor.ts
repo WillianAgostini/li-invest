@@ -17,7 +17,7 @@ export class TrackingInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => ({
         ...data,
-        trackId,
+        ['track-id']: trackId,
       })),
     );
   }
