@@ -1,4 +1,3 @@
-import { PoupancaResult } from '../interface/simulate-result';
 import * as finance from './finance';
 
 export function getPoupancaResult(amount: number, index: number, periods: number) {
@@ -7,7 +6,7 @@ export function getPoupancaResult(amount: number, index: number, periods: number
     totalProfit: interestAmount,
     totalAmount: amount + interestAmount,
     profitability: index,
-  } as PoupancaResult;
+  };
 }
 
 export function calculateFullMonthsDays(days: number): number {

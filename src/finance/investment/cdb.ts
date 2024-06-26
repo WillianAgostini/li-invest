@@ -1,4 +1,3 @@
-import { CdbResult } from '../interface/simulate-result';
 import * as finance from './finance';
 
 export function getCDBResult(amount: number, cdi: number, yearlyIndex: number, days: number) {
@@ -17,7 +16,7 @@ export function getCDBResult(amount: number, cdi: number, yearlyIndex: number, d
     iofAmount,
     cdi: cdi,
     profitability: yearlyIndex,
-  } as CdbResult;
+  };
 }
 
 function getIndexCDB(yearlyInterest: number, di: number): number {

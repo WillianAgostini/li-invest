@@ -1,13 +1,13 @@
 {
   "openapi": "3.1.0",
   "paths": {
-    "/simulation": {
+    "/simulation/poupanca": {
       "post": {
-        "operationId": "SimulationController_simulate",
+        "operationId": "SimulationController_poupanca",
         "parameters": [
           {
-            "name": "trackId",
-            "in": "query",
+            "name": "track-id",
+            "in": "header",
             "required": false,
             "schema": {
               "type": "string",
@@ -21,7 +21,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SimulateDto"
+                "$ref": "#/components/schemas/PoupancaSimulateDto"
               }
             }
           }
@@ -32,9 +32,163 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SimulateResult",
+                  "$ref": "#/components/schemas/PoupancaSimulateResult",
                   "properties": {
-                    "trackId": {
+                    "track-id": {
+                      "type": "string",
+                      "example": "123",
+                      "description": "The track ID associated with the request"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "simulation"
+        ]
+      }
+    },
+    "/simulation/cdb": {
+      "post": {
+        "operationId": "SimulationController_cdb",
+        "parameters": [
+          {
+            "name": "track-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123",
+              "description": "The track ID associated with the request"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CdbSimulateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CdbSimulateResult",
+                  "properties": {
+                    "track-id": {
+                      "type": "string",
+                      "example": "123",
+                      "description": "The track ID associated with the request"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "simulation"
+        ]
+      }
+    },
+    "/simulation/lcx": {
+      "post": {
+        "operationId": "SimulationController_lcx",
+        "parameters": [
+          {
+            "name": "track-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123",
+              "description": "The track ID associated with the request"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LcxSimulateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LcxSimulateResult",
+                  "properties": {
+                    "track-id": {
+                      "type": "string",
+                      "example": "123",
+                      "description": "The track ID associated with the request"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "simulation"
+        ]
+      }
+    },
+    "/simulation/product": {
+      "post": {
+        "operationId": "SimulationController_product",
+        "parameters": [
+          {
+            "name": "track-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123",
+              "description": "The track ID associated with the request"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductSimulateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/CdbSimulateResult"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LcxSimulateResult"
+                    }
+                  ],
+                  "properties": {
+                    "track-id": {
                       "type": "string",
                       "example": "123",
                       "description": "The track ID associated with the request"
@@ -55,8 +209,8 @@
         "operationId": "FeedbackController_simulate",
         "parameters": [
           {
-            "name": "trackId",
-            "in": "query",
+            "name": "track-id",
+            "in": "header",
             "required": false,
             "schema": {
               "type": "string",
@@ -90,8 +244,8 @@
         "operationId": "InvestmentController_get",
         "parameters": [
           {
-            "name": "trackId",
-            "in": "query",
+            "name": "track-id",
+            "in": "header",
             "required": false,
             "schema": {
               "type": "string",
@@ -111,7 +265,7 @@
                     "$ref": "#/components/schemas/CreateInvestmentResultDto"
                   },
                   "properties": {
-                    "trackId": {
+                    "track-id": {
                       "type": "string",
                       "example": "123",
                       "description": "The track ID associated with the request"
@@ -130,8 +284,8 @@
         "operationId": "InvestmentController_post",
         "parameters": [
           {
-            "name": "trackId",
-            "in": "query",
+            "name": "track-id",
+            "in": "header",
             "required": false,
             "schema": {
               "type": "string",
@@ -173,8 +327,8 @@
             }
           },
           {
-            "name": "trackId",
-            "in": "query",
+            "name": "track-id",
+            "in": "header",
             "required": false,
             "schema": {
               "type": "string",
@@ -201,8 +355,8 @@
         "operationId": "RegulationsController_getPrivacyPolicies",
         "parameters": [
           {
-            "name": "trackId",
-            "in": "query",
+            "name": "track-id",
+            "in": "header",
             "required": false,
             "schema": {
               "type": "string",
@@ -226,8 +380,8 @@
         "operationId": "RegulationsController_getTermsAndConditions",
         "parameters": [
           {
-            "name": "trackId",
-            "in": "query",
+            "name": "track-id",
+            "in": "header",
             "required": false,
             "schema": {
               "type": "string",
@@ -251,8 +405,8 @@
         "operationId": "RealTimeController_get",
         "parameters": [
           {
-            "name": "trackId",
-            "in": "query",
+            "name": "track-id",
+            "in": "header",
             "required": false,
             "schema": {
               "type": "string",
@@ -269,7 +423,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/RealTimeResponse",
                   "properties": {
-                    "trackId": {
+                    "track-id": {
                       "type": "string",
                       "example": "123",
                       "description": "The track ID associated with the request"
@@ -290,8 +444,8 @@
         "operationId": "RealTimeController_clear",
         "parameters": [
           {
-            "name": "trackId",
-            "in": "query",
+            "name": "track-id",
+            "in": "header",
             "required": false,
             "schema": {
               "type": "string",
@@ -312,7 +466,7 @@
     }
   },
   "info": {
-    "title": "Investment Advisor",
+    "title": "Li Invest",
     "description": "Assists in choosing fixed-income investments: CDB, RDB, LCI, LCA, and Savings Account.",
     "version": "1.0",
     "contact": {}
@@ -325,7 +479,58 @@
   ],
   "components": {
     "schemas": {
-      "SimulateDto": {
+      "PoupancaSimulateDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Valor do investimento",
+            "example": 1000
+          },
+          "months": {
+            "type": "number",
+            "description": "Meses de investimento",
+            "example": 12
+          }
+        },
+        "required": [
+          "amount",
+          "months"
+        ]
+      },
+      "PoupancaSimulateResult": {
+        "type": "object",
+        "properties": {
+          "investedAmount": {
+            "type": "number",
+            "description": "Valor Investido"
+          },
+          "periodInMonths": {
+            "type": "number",
+            "description": "Meses de investimento"
+          },
+          "totalProfit": {
+            "type": "number",
+            "description": "Rendimento Líquido"
+          },
+          "totalAmount": {
+            "type": "number",
+            "description": "Valor Total Líquido"
+          },
+          "profitability": {
+            "type": "number",
+            "description": "Rentabilidade da Poupança (a.m.) %"
+          }
+        },
+        "required": [
+          "investedAmount",
+          "periodInMonths",
+          "totalProfit",
+          "totalAmount",
+          "profitability"
+        ]
+      },
+      "CdbSimulateDto": {
         "type": "object",
         "properties": {
           "amount": {
@@ -338,21 +543,11 @@
             "description": "Meses de investimento",
             "example": 12
           },
-          "cdb": {
+          "cdiProfiability": {
             "type": "number",
             "description": "CDB/RDB percentual CDI",
             "example": 100,
             "default": 100
-          },
-          "lcx": {
-            "type": "number",
-            "description": "LCI/LCA percentual CDI",
-            "example": 100,
-            "default": 100
-          },
-          "productId": {
-            "type": "number",
-            "description": "Código do Produto de Investimento cadastrado pela Comunidade"
           }
         },
         "required": [
@@ -360,9 +555,17 @@
           "months"
         ]
       },
-      "CdbResult": {
+      "CdbSimulateResult": {
         "type": "object",
         "properties": {
+          "investedAmount": {
+            "type": "number",
+            "description": "Valor Investido"
+          },
+          "periodInMonths": {
+            "type": "number",
+            "description": "Meses de investimento"
+          },
           "totalProfit": {
             "type": "number",
             "description": "Rendimento Líquido"
@@ -393,6 +596,8 @@
           }
         },
         "required": [
+          "investedAmount",
+          "periodInMonths",
           "totalProfit",
           "totalAmount",
           "taxAmount",
@@ -402,24 +607,32 @@
           "profitability"
         ]
       },
-      "InvestmentData": {
+      "LcxSimulateDto": {
         "type": "object",
         "properties": {
-          "totalProfit": {
+          "amount": {
             "type": "number",
-            "description": "Rendimento Líquido"
+            "description": "Valor do investimento",
+            "example": 1000
           },
-          "totalAmount": {
+          "months": {
             "type": "number",
-            "description": "Valor Total Líquido"
+            "description": "Meses de investimento",
+            "example": 12
+          },
+          "cdiProfiability": {
+            "type": "number",
+            "description": "LCI/LCA percentual CDI",
+            "example": 100,
+            "default": 100
           }
         },
         "required": [
-          "totalProfit",
-          "totalAmount"
+          "amount",
+          "months"
         ]
       },
-      "SimulateResult": {
+      "LcxSimulateResult": {
         "type": "object",
         "properties": {
           "investedAmount": {
@@ -430,37 +643,56 @@
             "type": "number",
             "description": "Meses de investimento"
           },
-          "cdb": {
-            "description": "CDB/RDB",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CdbResult"
-              }
-            ]
+          "totalProfit": {
+            "type": "number",
+            "description": "Rendimento Líquido"
           },
-          "lcx": {
-            "description": "LCI / LCA",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/InvestmentData"
-              }
-            ]
+          "totalAmount": {
+            "type": "number",
+            "description": "Valor Total Líquido"
           },
-          "poupanca": {
-            "description": "Poupança",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/InvestmentData"
-              }
-            ]
+          "profitability": {
+            "type": "number",
+            "description": "LCI/LCA percentual CDI"
+          },
+          "cdi": {
+            "type": "number",
+            "description": "CDI (a.a.) %"
           }
         },
         "required": [
           "investedAmount",
           "periodInMonths",
-          "cdb",
-          "lcx",
-          "poupanca"
+          "totalProfit",
+          "totalAmount",
+          "profitability",
+          "cdi"
+        ]
+      },
+      "ProductSimulateDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Valor do investimento",
+            "example": 1000
+          },
+          "months": {
+            "type": "number",
+            "description": "Meses de investimento",
+            "example": 12
+          },
+          "productId": {
+            "type": "number",
+            "description": "Código do Produto de Investimento cadastrado pela Comunidade",
+            "example": 1,
+            "default": 1
+          }
+        },
+        "required": [
+          "amount",
+          "months",
+          "productId"
         ]
       },
       "NewFeedbackDto": {

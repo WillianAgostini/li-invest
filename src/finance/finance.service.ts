@@ -1,14 +1,15 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { getDurationInDays } from 'src/utils/conveter';
 import { clone, isNullOrUndefined } from 'src/utils/util';
+import { RateType } from './entity/financial-rate';
 import { FeeService } from './fee/fee.service';
 import { FinancialRateService } from './financial-rate/financial-rate.service';
 import { DetailedValues, Fees } from './interface/fees';
-import { Simulate } from './interface/simulate';
-import { SimulateResult } from './interface/simulate-result';
+import { CdbSimulateResult, LcxSimulateResult, PoupancaSimulateResult } from './interface/simulate-result';
 import { getCDBResult } from './investment/cdb';
 import { getLcxResult } from './investment/lcx';
 import { getPoupancaResult } from './investment/poupanca';
-import { RateType } from './entity/financial-rate';
+import { PoupancaSimulateDto, CdbSimulateDto } from 'src/simulation/dto/simulate-dto';
 
 @Injectable()
 export class FinanceService {
@@ -28,56 +29,34 @@ export class FinanceService {
     this.cache = undefined;
   }
 
-  async simulate(simulate: Simulate) {
+  async poupancaSimulate(dto: PoupancaSimulateDto): Promise<PoupancaSimulateResult> {
     const fees = await this.getCurrentFees();
-    const response = {
-      investedAmount: simulate.amount,
-      periodInMonths: simulate.months,
-    };
-
-    if (simulate.productObject?.id && simulate.productObject.profitabilityType == 'CDI') {
-      if (simulate.months > simulate.productObject.getMonthsUntilMaturity() + 1) {
-        throw new BadRequestException('Data da simulação não pode ser maior que a data final do investimento');
-      }
-
-      if (simulate.productObject.type == 'CDB') {
-        const rentabilidadeCdb = Number(simulate.productObject.profitability);
-        return {
-          ...response,
-          cdb: getCDBResult(simulate.amount, fees.cdi.value, rentabilidadeCdb, simulate.days),
-        } as SimulateResult;
-      }
-      if (simulate.productObject.type == 'LCI' || simulate.productObject.type == 'LCA') {
-        const rentabilidadeLcx = Number(simulate.productObject.profitability);
-        return {
-          ...response,
-          lcx: getLcxResult(simulate.amount, fees.cdi.value, rentabilidadeLcx, simulate.days),
-        } as SimulateResult;
-      }
-
-      throw new BadRequestException('Esse investimento não pode ser simulado ainda');
-    }
-
-    if (!isNullOrUndefined(simulate.cdb) && isNullOrUndefined(simulate.lcx)) {
-      return {
-        ...response,
-        cdb: getCDBResult(simulate.amount, fees.cdi.value, simulate.cdb, simulate.days),
-      } as SimulateResult;
-    }
-
-    if (isNullOrUndefined(simulate.cdb) && !isNullOrUndefined(simulate.lcx)) {
-      return {
-        ...response,
-        lcx: getLcxResult(simulate.amount, fees.cdi.value, simulate.lcx, simulate.days),
-      } as SimulateResult;
-    }
-
+    const poupanca = getPoupancaResult(dto.amount, fees.poupanca.value, getDurationInDays(dto.months));
     return {
-      ...response,
-      poupanca: getPoupancaResult(simulate.amount, fees.poupanca.value, simulate.days),
-      cdb: getCDBResult(simulate.amount, fees.cdi.value, simulate.cdb ?? fees.rentabilidadeCdb, simulate.days),
-      lcx: getLcxResult(simulate.amount, fees.cdi.value, simulate.lcx ?? fees.rentabilidadeLcx, simulate.days),
-    } as SimulateResult;
+      investedAmount: dto.amount,
+      periodInMonths: dto.months,
+      ...poupanca,
+    };
+  }
+
+  async cdbSimulate(dto: CdbSimulateDto): Promise<CdbSimulateResult> {
+    const fees = await this.getCurrentFees();
+    const cdb = getCDBResult(dto.amount, fees.cdi.value, dto.cdiProfiability, getDurationInDays(dto.months));
+    return {
+      investedAmount: dto.amount,
+      periodInMonths: dto.months,
+      ...cdb,
+    };
+  }
+
+  async lcxSimulate(dto: CdbSimulateDto): Promise<LcxSimulateResult> {
+    const fees = await this.getCurrentFees();
+    const lcx = getLcxResult(dto.amount, fees.cdi.value, dto.cdiProfiability, getDurationInDays(dto.months));
+    return {
+      investedAmount: dto.amount,
+      periodInMonths: dto.months,
+      ...lcx,
+    };
   }
 
   async getCurrentFees() {

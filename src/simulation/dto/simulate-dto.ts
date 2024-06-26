@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber } from 'class-validator';
 
-export class SimulateDto {
+class SimulateDto {
   @ApiProperty({
     description: 'Valor do investimento',
     type: Number,
@@ -14,7 +15,11 @@ export class SimulateDto {
     example: 12,
   })
   months: number;
+}
 
+export class PoupancaSimulateDto extends SimulateDto {}
+
+export class CdbSimulateDto extends SimulateDto {
   @ApiProperty({
     description: 'CDB/RDB percentual CDI',
     type: Number,
@@ -22,8 +27,10 @@ export class SimulateDto {
     example: 100,
     default: 100,
   })
-  cdb: number;
+  cdiProfiability: number;
+}
 
+export class LcxSimulateDto extends SimulateDto {
   @ApiProperty({
     description: 'LCI/LCA percentual CDI',
     type: Number,
@@ -31,12 +38,17 @@ export class SimulateDto {
     example: 100,
     default: 100,
   })
-  lcx: number;
+  cdiProfiability: number;
+}
 
+export class ProductSimulateDto extends SimulateDto {
   @ApiProperty({
     description: 'Código do Produto de Investimento cadastrado pela Comunidade',
     type: Number,
-    required: false,
+    required: true,
+    example: 1,
+    default: 1,
   })
-  productId?: number;
+  @IsNumber()
+  productId: number;
 }
