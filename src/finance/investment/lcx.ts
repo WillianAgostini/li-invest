@@ -1,4 +1,3 @@
-import { LcxResult } from '../interface/simulate-result';
 import * as finance from './finance';
 
 export function getLcxResult(amount: number, cdi: number, yearlyIndex: number, periods: number) {
@@ -8,7 +7,7 @@ export function getLcxResult(amount: number, cdi: number, yearlyIndex: number, p
     totalAmount: amount + interestAmount,
     cdi: cdi,
     profitability: yearlyIndex,
-  } as LcxResult;
+  };
 }
 
 function getIndexLcx(yearlyInterest: number, cdi: number): number {

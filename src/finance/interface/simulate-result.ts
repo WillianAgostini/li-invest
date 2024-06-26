@@ -1,6 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-class InvestmentData {
+class SimulateResult {
+  @ApiProperty({
+    description: 'Valor Investido',
+    type: Number,
+  })
+  investedAmount: number;
+
+  @ApiProperty({
+    description: 'Meses de investimento',
+    type: Number,
+  })
+  periodInMonths: number;
+
   @ApiProperty({
     description: 'Rendimento Líquido',
     type: Number,
@@ -14,7 +26,7 @@ class InvestmentData {
   totalAmount: number;
 }
 
-export class PoupancaResult extends InvestmentData {
+export class PoupancaSimulateResult extends SimulateResult {
   @ApiProperty({
     description: 'Rentabilidade da Poupança (a.m.) %',
     type: Number,
@@ -22,7 +34,7 @@ export class PoupancaResult extends InvestmentData {
   profitability: number;
 }
 
-export class CdbResult extends InvestmentData {
+export class CdbSimulateResult extends SimulateResult {
   @ApiProperty({
     description: 'Valor total IOF',
     type: Number,
@@ -55,7 +67,7 @@ export class CdbResult extends InvestmentData {
   profitability: number;
 }
 
-export class LcxResult extends InvestmentData {
+export class LcxSimulateResult extends SimulateResult {
   @ApiProperty({
     description: 'LCI/LCA percentual CDI',
     type: Number,
@@ -67,36 +79,4 @@ export class LcxResult extends InvestmentData {
     type: Number,
   })
   cdi: number;
-}
-
-export class SimulateResult {
-  @ApiProperty({
-    description: 'Valor Investido',
-    type: Number,
-  })
-  investedAmount: number;
-
-  @ApiProperty({
-    description: 'Meses de investimento',
-    type: Number,
-  })
-  periodInMonths: number;
-
-  @ApiProperty({
-    description: 'CDB/RDB',
-    type: CdbResult,
-  })
-  cdb: CdbResult;
-
-  @ApiProperty({
-    description: 'LCI / LCA',
-    type: InvestmentData,
-  })
-  lcx: LcxResult;
-
-  @ApiProperty({
-    description: 'Poupança',
-    type: InvestmentData,
-  })
-  poupanca: PoupancaResult;
 }

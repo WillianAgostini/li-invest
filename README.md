@@ -1,4 +1,3 @@
-
 # Li-Invest
 
 Li-Invest is an application for managing investments, providing features such as simulations, investment history, and profitability analysis. This application utilizes various technologies, including CDB, RDB, LCI, LCA, and savings.
@@ -22,16 +21,15 @@ Li-Invest is an application for managing investments, providing features such as
 
 1. Clone the repository:
 
-    git clone https://github.com/WillianAgostini/li-invest.git
+   git clone https://github.com/WillianAgostini/li-invest.git
 
 2. Navigate to the project directory:
 
-    cd li-invest
+   cd li-invest
 
 3. Install the dependencies:
 
-    npm install
-
+   npm install
 
 4. Configure the environment variables as needed (example of `.env` provided in the repository).
 
@@ -41,19 +39,15 @@ Li-Invest is an application for managing investments, providing features such as
 
 - **Start the development server:**
 
-    npm run dev
-
+  npm run dev
 
 - **Run tests:**
 
-    npm test
-
+  npm test
 
 - **Generate production build:**
 
-    npm run build
-
-
+  npm run build
 
 ## Contribution
 
@@ -62,15 +56,15 @@ If you wish to contribute to this project, follow the steps below:
 1. Fork the repository.
 2. Create a branch for your feature or bugfix:
 
-    git checkout -b my-feature
+   git checkout -b my-feature
 
 3. Commit your changes:
 
-    git commit -m 'Add new feature'
+   git commit -m 'Add new feature'
 
 4. Push to the main branch:
 
-    git push origin my-feature
+   git push origin my-feature
 
 5. Open a Pull Request.
 
