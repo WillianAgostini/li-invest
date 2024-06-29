@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { writeFileSync } from 'fs';
 import { addTrackIdToResponses, addTrackIdToHeaders } from './interceptor/tracking.interceptor';
+import { SimulationService } from './simulation/simulation.service';
 // import { SimulationService } from './simulation/simulation.service';
 
 async function bootstrap() {
@@ -30,7 +31,9 @@ async function bootstrap() {
     jsonDocumentUrl: 'swagger',
   });
 
-  // const simulationService = app.get<SimulationService>(SimulationService);
+  const simulationService = app.get<SimulationService>(SimulationService);
+  const fees = await simulationService.getFees();
+  console.log(fees);
   // console.log(await simulationService.simulate({
   //   amount: 10000,
   //   months: 12,

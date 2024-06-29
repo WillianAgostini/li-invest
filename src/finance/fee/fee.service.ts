@@ -3,32 +3,19 @@ import { Injectable, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { DetailedValues } from '../interface/fees';
 import moment from 'moment';
+import { convertToBr } from 'src/utils/conveter';
 
 @Injectable()
 export class FeeService {
   private readonly logger = new Logger(FeeService.name);
 
-  constructor(private readonly httpService: HttpService) {}
-
-  async getDi(): Promise<DetailedValues | undefined> {
-    try {
-      // const { data } = await firstValueFrom(this.httpService.get('https://www2.cetip.com.br/ConsultarTaxaDi/ConsultarTaxaDICetip.aspx'));
-      // const value = parseFloat(data.taxa.replace(/[.]/g, '').replace(',', '.'));
-      // const updatedAt = data?.at(0)?.data;
-      return {
-        value: 10,
-        updatedAt: new Date().toString(),
-      } as DetailedValues;
-    } catch (error) {
-      this.logger.error(error);
-    }
-  }
+  constructor(private readonly httpService: HttpService) { }
 
   async getPoupanca(): Promise<DetailedValues | undefined> {
     try {
       const { data } = await firstValueFrom(this.httpService.get('https://api.bcb.gov.br/dados/serie/bcdata.sgs.195/dados/ultimos/1?formato=json'));
       const value = parseFloat(data?.at(0)?.valor);
-      const updatedAt = data?.at(0)?.data;
+      const updatedAt = convertToBr(data?.at(0)?.data, 'DD/MM/YYYY');
       return {
         value,
         updatedAt,
@@ -42,7 +29,7 @@ export class FeeService {
     try {
       const { data } = await firstValueFrom(this.httpService.get('https://api.bcb.gov.br/dados/serie/bcdata.sgs.1178/dados/ultimos/1?formato=json'));
       const value = parseFloat(data?.at(0)?.valor);
-      const updatedAt = data?.at(0)?.data;
+      const updatedAt = convertToBr(data?.at(0)?.data, 'DD/MM/YYYY');
       return {
         value,
         updatedAt,
@@ -57,22 +44,8 @@ export class FeeService {
       const { data } = await firstValueFrom(this.httpService.get('https://www.bcb.gov.br/api/servico/sitebcb/historicotaxasjuros'));
       const value = parseFloat(data.conteudo?.at(0)?.MetaSelic);
       const today = new Date();
-      const updatedAt = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+      const updatedAt = convertToBr(`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`, 'DD/MM/YYYY');
 
-      return {
-        value,
-        updatedAt,
-      } as DetailedValues;
-    } catch (error) {
-      this.logger.error(error);
-    }
-  }
-
-  async getCdi(): Promise<DetailedValues | undefined> {
-    try {
-      const { data } = await firstValueFrom(this.httpService.get('https://api.bcb.gov.br/dados/serie/bcdata.sgs.4389/dados/ultimos/1?formato=json'));
-      const value = parseFloat(data?.at(0)?.valor);
-      const updatedAt = data?.at(0)?.data;
       return {
         value,
         updatedAt,
@@ -90,7 +63,7 @@ export class FeeService {
         ),
       );
       const value = parseFloat(data.value?.at(0)?.Mediana);
-      const updatedAt = data.value?.at(0)?.Data;
+      const updatedAt = convertToBr(data.value?.at(0)?.Data, 'YYYY-MM-DD');
       return {
         value,
         updatedAt,
@@ -104,7 +77,7 @@ export class FeeService {
     try {
       const { data } = await firstValueFrom(this.httpService.get('https://api.bcb.gov.br/dados/serie/bcdata.sgs.226/dados/ultimos/1?formato=json'));
       const value = parseFloat(data?.at(0)?.valor);
-      const updatedAt = data?.at(0)?.data;
+      const updatedAt = convertToBr(data?.at(0)?.data, 'DD/MM/YYYY');
       return {
         value,
         updatedAt,
@@ -115,21 +88,34 @@ export class FeeService {
   }
 
   async getDolar(): Promise<DetailedValues | undefined> {
-    try {
-      const today = moment().format('MM-DD-YYYY');
-      const { data } = await firstValueFrom(
-        this.httpService.get(
-          `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaAberturaOuIntermediario(codigoMoeda=@codigoMoeda,dataCotacao=@dataCotacao)?@codigoMoeda='USD'&@dataCotacao='${today}'&$format=json`,
-        ),
-      );
-      const value = parseFloat(data.value?.at(0)?.cotacaoCompra);
-      const updatedAt = data.value?.at(0)?.dataHoraCotacao;
-      return {
-        value,
-        updatedAt,
-      } as DetailedValues;
-    } catch (error) {
-      this.logger.error(error);
+    let attempts = 0;
+    const maxAttempts = 3;
+    let today = moment().add(1, 'day').format('MM-DD-YYYY');
+
+    while (attempts < maxAttempts) {
+      try {
+        today = moment().subtract(attempts, 'days').format('MM-DD-YYYY');
+        const { data } = await firstValueFrom(
+          this.httpService.get(
+            `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaAberturaOuIntermediario(codigoMoeda=@codigoMoeda,dataCotacao=@dataCotacao)?@codigoMoeda='USD'&@dataCotacao='${today}'&$format=json`,
+          ),
+        );
+        if (!data?.value?.at(0)?.dataHoraCotacao) {
+          attempts++;
+          continue;
+        }
+        const value = parseFloat(data.value?.at(0)?.cotacaoCompra);
+        const updatedAt = convertToBr(data.value?.at(0)?.dataHoraCotacao, 'YYYY-MM-DD');
+        return {
+          value,
+          updatedAt,
+        } as DetailedValues;
+      } catch (error) {
+        this.logger.error(`Error fetching USD rate for ${today}: ${error.message}`);
+        attempts++;
+      }
     }
+
+    return undefined;
   }
 }
