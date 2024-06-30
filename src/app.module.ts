@@ -3,9 +3,6 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import dotenv from 'dotenv';
 import { AuthGuard } from './auth/auth.guard';
-import { Feedback } from './feedback/entity/feedback';
-import { FeedbackController } from './feedback/feedback.controller';
-import { FeedbackService } from './feedback/feedback.service';
 import { FinancialRate } from './finance/entity/financial-rate';
 import { FinanceModule } from './finance/finance.module';
 import { Investment } from './investment/entity/investment';
@@ -31,12 +28,12 @@ dotenv.config();
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       ssl: { rejectUnauthorized: false },
-      entities: [Feedback, FinancialRate, Investment, Track],
+      entities: [FinancialRate, Investment, Track],
     }),
-    TypeOrmModule.forFeature([Feedback, FinancialRate, Investment, Track]),
+    TypeOrmModule.forFeature([FinancialRate, Investment, Track]),
     FinanceModule,
   ],
-  controllers: [SimulationController, FeedbackController, InvestmentController, RegulationsController, RealTimeController],
+  controllers: [SimulationController, InvestmentController, RegulationsController, RealTimeController],
   providers: [
     {
       provide: APP_GUARD,
@@ -47,7 +44,6 @@ dotenv.config();
       useClass: TrackingInterceptor,
     },
     SimulationService,
-    FeedbackService,
     InvestmentService,
     TrackService,
   ],
