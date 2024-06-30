@@ -3,19 +3,16 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import dotenv from 'dotenv';
 import { AuthGuard } from './auth/auth.guard';
-import { FinancialRate } from './finance/entity/financial-rate';
-import { FinanceModule } from './finance/finance.module';
-import { Investment } from './investment/entity/investment';
-import { InvestmentController } from './investment/investment.controller';
-import { InvestmentService } from './investment/investment.service';
-import { LoggerMiddleware } from './middleware/logger.middleware';
-import { RealTimeController } from './real-time/real-time.controller';
-import { RegulationsController } from './regulations/regulations.controller';
-import { SimulationController } from './simulation/simulation.controller';
-import { SimulationService } from './simulation/simulation.service';
-import { TrackService } from './track/track.service';
-import { Track } from './track/entity/track';
 import { TrackingInterceptor } from './interceptor/tracking.interceptor';
+import { Investment } from './investment/entities/investment';
+import { InvestmentModule } from './investment/investment.module';
+import { LoggerMiddleware } from './middleware/logger.middleware';
+import { RealTimeModule } from './real-time/real-time.module';
+import { RegulationsModule } from './regulations/regulations.module';
+import { FinancialRate } from './simulation/entities/financial-rate';
+import { SimulationModule } from './simulation/simulation.module';
+import { Track } from './track/entities/track';
+import { TrackModule } from './track/track.module';
 dotenv.config();
 
 @Module({
@@ -28,12 +25,16 @@ dotenv.config();
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       ssl: { rejectUnauthorized: false },
-      entities: [FinancialRate, Investment, Track],
+      entities: [FinancialRate, Investment],
     }),
     TypeOrmModule.forFeature([FinancialRate, Investment, Track]),
-    FinanceModule,
+    SimulationModule,
+    RegulationsModule,
+    RealTimeModule,
+    TrackModule,
+    InvestmentModule,
   ],
-  controllers: [SimulationController, InvestmentController, RegulationsController, RealTimeController],
+  controllers: [],
   providers: [
     {
       provide: APP_GUARD,
@@ -43,9 +44,6 @@ dotenv.config();
       provide: APP_INTERCEPTOR,
       useClass: TrackingInterceptor,
     },
-    SimulationService,
-    InvestmentService,
-    TrackService,
   ],
 })
 export class AppModule implements NestModule {

@@ -204,41 +204,6 @@
         ]
       }
     },
-    "/feedback": {
-      "post": {
-        "operationId": "FeedbackController_simulate",
-        "parameters": [
-          {
-            "name": "track-id",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "123",
-              "description": "The track ID associated with the request"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewFeedbackDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "feedback"
-        ]
-      }
-    },
     "/investment": {
       "get": {
         "operationId": "InvestmentController_get",
@@ -693,28 +658,6 @@
           "amount",
           "months",
           "productId"
-        ]
-      },
-      "NewFeedbackDto": {
-        "type": "object",
-        "properties": {
-          "conversation": {
-            "type": "string",
-            "description": "Resumo atual do ChatGPT"
-          },
-          "userComment": {
-            "type": "string",
-            "description": "Descrição do problema ou sugestão de melhoria fornecida pelo usuário"
-          },
-          "category": {
-            "type": "string",
-            "description": "Categoria do feedback gerada pelo ChatGPT com base na descrição em userComment"
-          }
-        },
-        "required": [
-          "conversation",
-          "userComment",
-          "category"
         ]
       },
       "CreateInvestmentResultDto": {

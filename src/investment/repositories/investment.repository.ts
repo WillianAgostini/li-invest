@@ -1,13 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateInvestmentDto } from './dto/create-investment-dto';
-import { InsertResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-
-import { Investment } from './entity/investment';
-import { InvestmentMapper } from './mapper/investment.mapper';
+import { InsertResult, Repository } from 'typeorm';
+import { CreateInvestmentDto } from '../dto/create-investment-dto';
+import { Investment } from '../entities/investment';
+import { InvestmentMapper } from '../mapper/investment.mapper';
 
 @Injectable()
-export class InvestmentService {
+export class InvestmentRepository {
   constructor(
     @InjectRepository(Investment)
     private investmentRepository: Repository<Investment>,

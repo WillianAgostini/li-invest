@@ -9,7 +9,7 @@ import { convertToBr } from 'src/utils/conveter';
 export class FeeService {
   private readonly logger = new Logger(FeeService.name);
 
-  constructor(private readonly httpService: HttpService) { }
+  constructor(private readonly httpService: HttpService) {}
 
   async getPoupanca(): Promise<DetailedValues | undefined> {
     try {

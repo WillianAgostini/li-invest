@@ -1,13 +1,13 @@
 import { Body, Controller, Logger, Post } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CdbSimulateResult, LcxSimulateResult, PoupancaSimulateResult } from 'src/finance/interface/simulate-result';
-import { SimulationService } from './simulation.service';
-import { CdbSimulateDto, LcxSimulateDto, PoupancaSimulateDto, ProductSimulateDto } from './dto/simulate-dto';
+import { CdbSimulateResult, LcxSimulateResult, PoupancaSimulateResult } from 'src/simulation/interface/simulate-result';
+import { CdbSimulateDto, LcxSimulateDto, PoupancaSimulateDto, ProductSimulateDto } from '../dto/simulate-dto';
+import { SimulationService } from '../services/simulation.service';
 
 @Controller('simulation')
 @ApiTags('simulation')
 export class SimulationController {
-  private readonly logger = new Logger(SimulationService.name);
+  private readonly logger = new Logger(SimulationController.name);
 
   constructor(private simulationService: SimulationService) {}
 

@@ -4,8 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { writeFileSync } from 'fs';
 import { addTrackIdToResponses, addTrackIdToHeaders } from './interceptor/tracking.interceptor';
-import { SimulationService } from './simulation/simulation.service';
-// import { SimulationService } from './simulation/simulation.service';
+import { SimulationService } from './simulation/services/simulation.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

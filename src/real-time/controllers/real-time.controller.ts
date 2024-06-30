@@ -1,8 +1,8 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SimulationService } from 'src/simulation/simulation.service';
-import { RealTimeResponse } from './interface/real-time-response';
 import moment from 'moment';
+import { SimulationService } from 'src/simulation/services/simulation.service';
+import { RealTimeResponse } from '../dtos/real-time-response';
 
 @Controller('realTime')
 @ApiTags('realTime')

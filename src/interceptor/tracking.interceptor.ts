@@ -1,7 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
 import { OpenAPIObject } from '@nestjs/swagger';
 import { Observable, map } from 'rxjs';
-import { TrackService } from 'src/track/track.service';
+import { TrackService } from 'src/track/services/track.service';
 
 @Injectable()
 export class TrackingInterceptor implements NestInterceptor {

@@ -1,14 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { getDurationInDays } from 'src/utils/conveter';
 import { clone, isNullOrUndefined } from 'src/utils/util';
-import { RateType } from './entity/financial-rate';
-import { FeeService } from './fee/fee.service';
-import { FinancialRateService } from './financial-rate/financial-rate.service';
-import { DetailedValues, Fees } from './interface/fees';
-import { CdbSimulateResult, LcxSimulateResult, PoupancaSimulateResult } from './interface/simulate-result';
-import { getCDBResult } from './investment/cdb';
-import { getLcxResult } from './investment/lcx';
-import { getPoupancaResult } from './investment/poupanca';
+import { RateType } from '../entities/financial-rate';
+import { FeeService } from './fee.service';
+import { FinancialRateRepository } from '../repositories/financial-rate.repository';
+import { DetailedValues, Fees } from '../interface/fees';
+import { CdbSimulateResult, LcxSimulateResult, PoupancaSimulateResult } from '../interface/simulate-result';
+import { getCDBResult } from '../core/cdb';
+import { getLcxResult } from '../core/lcx';
+import { getPoupancaResult } from '../core/poupanca';
 import { PoupancaSimulateDto, CdbSimulateDto } from 'src/simulation/dto/simulate-dto';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class FinanceService {
 
   constructor(
     private feeService: FeeService,
-    private financialRateService: FinancialRateService,
+    private financialRateService: FinancialRateRepository,
   ) {
     const oneHour = 60 * 60 * 1000;
     setInterval(this.clearFees, oneHour);

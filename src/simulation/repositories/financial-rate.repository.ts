@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, InsertResult } from 'typeorm';
-import { FinancialRate } from '../entity/financial-rate';
+import { FinancialRate } from '../entities/financial-rate';
 
 export interface IFinancialRate {
   cdi: FinancialRate;
@@ -13,7 +13,7 @@ export interface IFinancialRate {
 }
 
 @Injectable()
-export class FinancialRateService {
+export class FinancialRateRepository {
   constructor(
     @InjectRepository(FinancialRate)
     private financialRateRepository: Repository<FinancialRate>,

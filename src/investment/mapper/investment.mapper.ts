@@ -1,5 +1,5 @@
 import { CreateInvestmentResultDto } from '../dto/create-investment-dto';
-import { Investment } from '../entity/investment';
+import { Investment } from '../entities/investment';
 
 export class InvestmentMapper {
   static toCreateInvestmentResultDto(investment: Investment): CreateInvestmentResultDto {
