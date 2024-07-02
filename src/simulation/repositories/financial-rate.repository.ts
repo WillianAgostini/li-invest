@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, InsertResult } from 'typeorm';
+import { DataSource, InsertResult, Repository } from 'typeorm';
 import { FinancialRate } from '../entities/financial-rate';
 
 export interface IFinancialRate {
@@ -14,10 +13,11 @@ export interface IFinancialRate {
 
 @Injectable()
 export class FinancialRateRepository {
-  constructor(
-    @InjectRepository(FinancialRate)
-    private financialRateRepository: Repository<FinancialRate>,
-  ) {}
+  private readonly financialRateRepository: Repository<FinancialRate>;
+
+  constructor(private dataSource: DataSource) {
+    this.financialRateRepository = this.dataSource.getRepository(FinancialRate);
+  }
 
   async findAll(): Promise<IFinancialRate> {
     const financialRate = await this.financialRateRepository.find();

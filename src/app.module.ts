@@ -13,20 +13,12 @@ import { FinancialRate } from './simulation/entities/financial-rate';
 import { SimulationModule } from './simulation/simulation.module';
 import { Track } from './track/entities/track';
 import { TrackModule } from './track/track.module';
+import { DataSourceOrmModule } from './data-source-orm.module';
 dotenv.config();
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      port: 5432,
-      host: process.env.DATABASE_HOST,
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      ssl: { rejectUnauthorized: false },
-      entities: [FinancialRate, Investment],
-    }),
+    DataSourceOrmModule,
     TypeOrmModule.forFeature([FinancialRate, Investment, Track]),
     SimulationModule,
     RegulationsModule,

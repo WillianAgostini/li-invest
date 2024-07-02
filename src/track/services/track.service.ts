@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { Track } from '../entities/track';
 
 @Injectable()
 export class TrackService {
-  constructor(
-    @InjectRepository(Track)
-    private trackRepository: Repository<Track>,
-  ) {}
+  private readonly trackRepository: Repository<Track>;
+
+  constructor(private dataSource: DataSource) {
+    this.trackRepository = this.dataSource.getRepository(Track);
+  }
 
   async increment(id: string): Promise<Track> {
     if (!id) {

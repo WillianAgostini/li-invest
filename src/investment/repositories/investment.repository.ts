@@ -1,16 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { InsertResult, Repository } from 'typeorm';
+import { DataSource, InsertResult, Repository } from 'typeorm';
 import { CreateInvestmentDto } from '../dto/create-investment-dto';
 import { Investment } from '../entities/investment';
 import { InvestmentMapper } from '../mapper/investment.mapper';
 
 @Injectable()
 export class InvestmentRepository {
-  constructor(
-    @InjectRepository(Investment)
-    private investmentRepository: Repository<Investment>,
-  ) {}
+  private readonly investmentRepository: Repository<Investment>;
+
+  constructor(private dataSource: DataSource) {
+    this.investmentRepository = this.dataSource.getRepository(Investment);
+  }
 
   getById(id: number): any {
     return this.investmentRepository.findOneBy({ id });
