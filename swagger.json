@@ -4,18 +4,7 @@
     "/simulation/poupanca": {
       "post": {
         "operationId": "SimulationController_poupanca",
-        "parameters": [
-          {
-            "name": "track-id",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "123",
-              "description": "The track ID associated with the request"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -32,14 +21,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PoupancaSimulateResult",
-                  "properties": {
-                    "track-id": {
-                      "type": "string",
-                      "example": "123",
-                      "description": "The track ID associated with the request"
-                    }
-                  }
+                  "$ref": "#/components/schemas/PoupancaSimulateResult"
                 }
               }
             }
@@ -53,18 +35,7 @@
     "/simulation/cdb": {
       "post": {
         "operationId": "SimulationController_cdb",
-        "parameters": [
-          {
-            "name": "track-id",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "123",
-              "description": "The track ID associated with the request"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -81,14 +52,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CdbSimulateResult",
-                  "properties": {
-                    "track-id": {
-                      "type": "string",
-                      "example": "123",
-                      "description": "The track ID associated with the request"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CdbSimulateResult"
                 }
               }
             }
@@ -102,18 +66,7 @@
     "/simulation/lcx": {
       "post": {
         "operationId": "SimulationController_lcx",
-        "parameters": [
-          {
-            "name": "track-id",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "123",
-              "description": "The track ID associated with the request"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -130,14 +83,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LcxSimulateResult",
-                  "properties": {
-                    "track-id": {
-                      "type": "string",
-                      "example": "123",
-                      "description": "The track ID associated with the request"
-                    }
-                  }
+                  "$ref": "#/components/schemas/LcxSimulateResult"
                 }
               }
             }
@@ -151,18 +97,7 @@
     "/simulation/product": {
       "post": {
         "operationId": "SimulationController_product",
-        "parameters": [
-          {
-            "name": "track-id",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "123",
-              "description": "The track ID associated with the request"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -186,14 +121,7 @@
                     {
                       "$ref": "#/components/schemas/LcxSimulateResult"
                     }
-                  ],
-                  "properties": {
-                    "track-id": {
-                      "type": "string",
-                      "example": "123",
-                      "description": "The track ID associated with the request"
-                    }
-                  }
+                  ]
                 }
               }
             }
@@ -207,18 +135,7 @@
     "/investment": {
       "get": {
         "operationId": "InvestmentController_get",
-        "parameters": [
-          {
-            "name": "track-id",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "123",
-              "description": "The track ID associated with the request"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "",
@@ -228,13 +145,6 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/CreateInvestmentResultDto"
-                  },
-                  "properties": {
-                    "track-id": {
-                      "type": "string",
-                      "example": "123",
-                      "description": "The track ID associated with the request"
-                    }
                   }
                 }
               }
@@ -247,18 +157,7 @@
       },
       "post": {
         "operationId": "InvestmentController_post",
-        "parameters": [
-          {
-            "name": "track-id",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "123",
-              "description": "The track ID associated with the request"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -290,16 +189,6 @@
             "schema": {
               "type": "number"
             }
-          },
-          {
-            "name": "track-id",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "123",
-              "description": "The track ID associated with the request"
-            }
           }
         ],
         "responses": {
@@ -318,18 +207,7 @@
     "/regulations/privacyPolicies": {
       "get": {
         "operationId": "RegulationsController_getPrivacyPolicies",
-        "parameters": [
-          {
-            "name": "track-id",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "123",
-              "description": "The track ID associated with the request"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -343,18 +221,7 @@
     "/regulations/termsAndConditions": {
       "get": {
         "operationId": "RegulationsController_getTermsAndConditions",
-        "parameters": [
-          {
-            "name": "track-id",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "123",
-              "description": "The track ID associated with the request"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -368,32 +235,14 @@
     "/realTime": {
       "get": {
         "operationId": "RealTimeController_get",
-        "parameters": [
-          {
-            "name": "track-id",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "123",
-              "description": "The track ID associated with the request"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RealTimeResponse",
-                  "properties": {
-                    "track-id": {
-                      "type": "string",
-                      "example": "123",
-                      "description": "The track ID associated with the request"
-                    }
-                  }
+                  "$ref": "#/components/schemas/RealTimeResponse"
                 }
               }
             }
@@ -407,18 +256,7 @@
     "/realTime/clear": {
       "post": {
         "operationId": "RealTimeController_clear",
-        "parameters": [
-          {
-            "name": "track-id",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "123",
-              "description": "The track ID associated with the request"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "204": {
             "description": ""
