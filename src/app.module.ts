@@ -1,8 +1,8 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import dotenv from 'dotenv';
 import { AuthGuard } from './auth/auth.guard';
+import { DataSourceOrmModule } from './data-source-orm.module';
 import { TrackingInterceptor } from './interceptor/tracking.interceptor';
 import { Investment } from './investment/entities/investment';
 import { InvestmentModule } from './investment/investment.module';
@@ -13,8 +13,6 @@ import { FinancialRate } from './simulation/entities/financial-rate';
 import { SimulationModule } from './simulation/simulation.module';
 import { Track } from './track/entities/track';
 import { TrackModule } from './track/track.module';
-import { DataSourceOrmModule } from './data-source-orm.module';
-dotenv.config();
 
 @Module({
   imports: [
