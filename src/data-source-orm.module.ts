@@ -2,16 +2,18 @@ import { Global, Logger, Module } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Investment } from './investment/entities/investment';
 import { FinancialRate } from './simulation/entities/financial-rate';
-import { Track } from './track/entities/track';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const appDataSource = new DataSource({
   type: 'postgres',
   port: 5432,
+  host: process.env.DATABASE_HOST,
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
   ssl: { rejectUnauthorized: false },
-  entities: [FinancialRate, Investment, Track],
+  entities: [FinancialRate, Investment],
 });
 
 @Global()
@@ -29,7 +31,7 @@ const appDataSource = new DataSource({
           }
         } catch (error) {
           Logger.error(error, DataSourceOrmModule.name);
-          throw error;
+          // throw error;
         }
       },
     },
