@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { FinanceService } from 'src/finance/finance.service';
-import { CdbSimulateResult, LcxSimulateResult, PoupancaSimulateResult } from 'src/finance/interface/simulate-result';
-import { InvestmentService } from 'src/investment/investment.service';
-import { CdbSimulateDto, LcxSimulateDto, PoupancaSimulateDto, ProductSimulateDto } from './dto/simulate-dto';
-import { Investment } from 'src/investment/entity/investment';
-import { Fees } from 'src/finance/interface/fees';
+import { FinanceService } from 'src/simulation/services/finance.service';
+import { CdbSimulateResult, LcxSimulateResult, PoupancaSimulateResult } from 'src/simulation/interface/simulate-result';
+import { Investment } from 'src/investment/entities/investment';
+import { Fees } from 'src/simulation/interface/fees';
+import { CdbSimulateDto, LcxSimulateDto, PoupancaSimulateDto, ProductSimulateDto } from '../dto/simulate-dto';
+import { InvestmentRepository } from 'src/investment/repositories/investment.repository';
 
 @Injectable()
 export class SimulationService {
@@ -12,7 +12,7 @@ export class SimulationService {
 
   constructor(
     private financeService: FinanceService,
-    private investmentService: InvestmentService,
+    private investmentRepository: InvestmentRepository,
   ) {}
 
   getFees(): Promise<Fees> {
@@ -36,7 +36,7 @@ export class SimulationService {
   }
 
   async simulateProduct(dto: ProductSimulateDto): Promise<CdbSimulateResult | LcxSimulateResult> {
-    const productObject = (await this.investmentService.getById(dto.productId)) as Investment;
+    const productObject = (await this.investmentRepository.getById(dto.productId)) as Investment;
     if (!productObject) {
       throw new NotFoundException(`Produto ${dto.productId} não encontrado`);
     }

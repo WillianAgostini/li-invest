@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Fees } from 'src/finance/interface/fees';
+import { Fees } from 'src/simulation/interface/fees';
 
 export class RealTimeResponse {
   @ApiProperty({

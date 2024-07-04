@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import privacyPolicies from './privacyPolicies';
-import termsAndConditions from './termsAndConditions';
+import privacyPolicies from '../view/privacyPolicies';
+import termsAndConditions from '../view/termsAndConditions';
 import { SkipAuth } from 'src/decorator/skip-auth.decorator';
 
 @Controller('regulations')
