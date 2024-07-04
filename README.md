@@ -4,7 +4,7 @@
   <img src="./images/chatgpt.png" alt="Li-Invest">
 </p>
 
-**[Access the application here](https://chatgpt.com/c/1ad21803-a133-4f93-8081-4e866ac86e97)**
+**[Access the application here](https://chatgpt.com/g/g-sAIsmshA3-consultor-de-investimentos-na-renda-fixa)**
 
 Li-Invest is an application for managing investments, providing features such as simulations, investment history, and profitability analysis. This application utilizes various technologies, including CDB, RDB, LCI, LCA, and savings.
 
