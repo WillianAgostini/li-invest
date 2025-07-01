@@ -11,9 +11,8 @@ export interface IFinancialRate {
 
 @Injectable()
 export class FinancialRateRepository {
-
   private readonly cacheKey = 'financialRates';
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) { }
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
   async find(rate_type: RateType): Promise<FinancialRate> {
     return this.cacheManager.get<FinancialRate>(this.cacheKey + rate_type);

@@ -9,7 +9,7 @@ import { FinancialRate, RateType } from '../entities/financial-rate';
 export class FeeService {
   private readonly logger = new Logger(FeeService.name);
 
-  constructor(private readonly httpService: HttpService) { }
+  constructor(private readonly httpService: HttpService) {}
 
   async getSelicOver(): Promise<FinancialRate | undefined> {
     try {

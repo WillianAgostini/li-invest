@@ -9,7 +9,7 @@ import { SimulationService } from '../services/simulation.service';
 export class SimulationController {
   private readonly logger = new Logger(SimulationController.name);
 
-  constructor(private simulationService: SimulationService) { }
+  constructor(private simulationService: SimulationService) {}
 
   @Post('cdb')
   @ApiBody({ type: CdbSimulateDto })
@@ -24,5 +24,4 @@ export class SimulationController {
   async lcx(@Body() dto: LcxSimulateDto): Promise<LcxSimulateResult> {
     return await this.simulationService.lcxSimulate(dto);
   }
-
 }

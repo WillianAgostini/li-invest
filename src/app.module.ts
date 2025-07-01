@@ -6,12 +6,7 @@ import { SimulationModule } from './simulation/simulation.module';
 import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
-  imports: [
-    CacheModule.register({ isGlobal: true }),
-    SimulationModule,
-    RegulationsModule,
-    RealTimeModule,
-  ],
+  imports: [CacheModule.register({ isGlobal: true }), SimulationModule, RegulationsModule, RealTimeModule],
   controllers: [],
   providers: [],
 })

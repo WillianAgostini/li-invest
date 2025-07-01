@@ -16,7 +16,7 @@ export class FinanceService {
   constructor(
     private feeService: FeeService,
     private financialRateService: FinancialRateRepository,
-  ) { }
+  ) {}
 
   async clearFees() {
     for (const rateType of Object.values(RateType)) {
@@ -54,7 +54,7 @@ export class FinanceService {
       ipca: () => this.feeService.getIpca(),
       selic: () => this.feeService.getSelicMeta(),
       usd: () => this.feeService.getDolar(),
-    }
+    };
 
     for (const rateType of Object.values(RateType)) {
       let financialRate = await this.financialRateService.find(rateType);
@@ -66,5 +66,4 @@ export class FinanceService {
 
     return fees;
   }
-
 }

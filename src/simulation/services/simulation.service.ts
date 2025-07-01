@@ -6,10 +6,7 @@ import { CdbSimulateDto, LcxSimulateDto } from '../dto/simulate-dto';
 
 @Injectable()
 export class SimulationService {
-
-  constructor(
-    private financeService: FinanceService,
-  ) { }
+  constructor(private financeService: FinanceService) {}
 
   getFees(): Promise<Fees> {
     return this.financeService.getCurrentFees();

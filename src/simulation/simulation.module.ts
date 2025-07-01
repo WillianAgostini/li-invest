@@ -12,4 +12,4 @@ import { SimulationService } from './services/simulation.service';
   providers: [FinanceService, FeeService, FinancialRateRepository, SimulationService],
   exports: [SimulationService],
 })
-export class SimulationModule { }
+export class SimulationModule {}
