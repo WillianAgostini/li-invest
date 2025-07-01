@@ -1,37 +1,28 @@
-import { Injectable } from '@nestjs/common';
-import { DataSource, InsertResult, Repository } from 'typeorm';
-import { FinancialRate } from '../entities/financial-rate';
+import { Inject, Injectable } from '@nestjs/common';
+import { FinancialRate, RateType } from '../entities/financial-rate';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 
 export interface IFinancialRate {
   cdi: FinancialRate;
   ipca: FinancialRate;
-  poupanca: FinancialRate;
   selic: FinancialRate;
-  tr: FinancialRate;
   usd: FinancialRate;
 }
 
 @Injectable()
 export class FinancialRateRepository {
-  private readonly financialRateRepository: Repository<FinancialRate>;
+  private readonly cacheKey = 'financialRates';
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-  constructor(private dataSource: DataSource) {
-    this.financialRateRepository = this.dataSource.getRepository(FinancialRate);
+  async find(rate_type: RateType): Promise<FinancialRate> {
+    return this.cacheManager.get<FinancialRate>(this.cacheKey + rate_type);
   }
 
-  async findAll(): Promise<IFinancialRate> {
-    const financialRate = await this.financialRateRepository.find();
-    return {
-      cdi: financialRate?.find((x) => x.rate_type == 'cdi'),
-      ipca: financialRate?.find((x) => x.rate_type == 'ipca'),
-      poupanca: financialRate?.find((x) => x.rate_type == 'poupanca'),
-      selic: financialRate?.find((x) => x.rate_type == 'selic'),
-      tr: financialRate?.find((x) => x.rate_type == 'tr'),
-      usd: financialRate?.find((x) => x.rate_type == 'usd'),
-    };
+  async insert(financialRate: FinancialRate): Promise<void> {
+    this.cacheManager.set(this.cacheKey + financialRate.rate_type, financialRate, 60 * 60); // Cache for 1 hour
   }
 
-  insertOrUpdate(financialRate: Partial<FinancialRate>): Promise<InsertResult> {
-    return this.financialRateRepository.upsert(financialRate, ['rate_type']);
+  async delete(rate_type: RateType): Promise<void> {
+    await this.cacheManager.del(this.cacheKey + rate_type);
   }
 }

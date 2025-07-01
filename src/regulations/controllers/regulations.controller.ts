@@ -1,10 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeController, ApiResponse, ApiTags } from '@nestjs/swagger';
 import privacyPolicies from '../view/privacyPolicies';
 import termsAndConditions from '../view/termsAndConditions';
 
 @Controller('regulations')
 @ApiTags('regulations')
+@ApiExcludeController()
 export class RegulationsController {
   @Get('privacyPolicies')
   @ApiResponse({ status: 200 })

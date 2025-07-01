@@ -1,37 +1,6 @@
 {
   "openapi": "3.1.0",
   "paths": {
-    "/simulation/poupanca": {
-      "post": {
-        "operationId": "SimulationController_poupanca",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PoupancaSimulateDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PoupancaSimulateResult"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "simulation"
-        ]
-      }
-    },
     "/simulation/cdb": {
       "post": {
         "operationId": "SimulationController_cdb",
@@ -94,144 +63,6 @@
         ]
       }
     },
-    "/simulation/product": {
-      "post": {
-        "operationId": "SimulationController_product",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductSimulateDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/CdbSimulateResult"
-                    },
-                    {
-                      "$ref": "#/components/schemas/LcxSimulateResult"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "simulation"
-        ]
-      }
-    },
-    "/investment": {
-      "get": {
-        "operationId": "InvestmentController_get",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CreateInvestmentResultDto"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "investment"
-        ]
-      },
-      "post": {
-        "operationId": "InvestmentController_post",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateInvestmentDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "investment"
-        ]
-      }
-    },
-    "/investment/{id}": {
-      "delete": {
-        "operationId": "InvestmentController_delete",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "404": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "investment"
-        ]
-      }
-    },
-    "/regulations/privacyPolicies": {
-      "get": {
-        "operationId": "RegulationsController_getPrivacyPolicies",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "regulations"
-        ]
-      }
-    },
-    "/regulations/termsAndConditions": {
-      "get": {
-        "operationId": "RegulationsController_getTermsAndConditions",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "regulations"
-        ]
-      }
-    },
     "/realTime": {
       "get": {
         "operationId": "RealTimeController_get",
@@ -275,64 +106,9 @@
     "contact": {}
   },
   "tags": [],
-  "servers": [
-    {
-      "url": "https://li-invest.koyeb.app"
-    }
-  ],
+  "servers": [],
   "components": {
     "schemas": {
-      "PoupancaSimulateDto": {
-        "type": "object",
-        "properties": {
-          "amount": {
-            "type": "number",
-            "description": "Valor do investimento",
-            "example": 1000
-          },
-          "months": {
-            "type": "number",
-            "description": "Meses de investimento",
-            "example": 12
-          }
-        },
-        "required": [
-          "amount",
-          "months"
-        ]
-      },
-      "PoupancaSimulateResult": {
-        "type": "object",
-        "properties": {
-          "investedAmount": {
-            "type": "number",
-            "description": "Valor Investido"
-          },
-          "periodInMonths": {
-            "type": "number",
-            "description": "Meses de investimento"
-          },
-          "totalProfit": {
-            "type": "number",
-            "description": "Rendimento Líquido"
-          },
-          "totalAmount": {
-            "type": "number",
-            "description": "Valor Total Líquido"
-          },
-          "profitability": {
-            "type": "number",
-            "description": "Rentabilidade da Poupança (a.m.) %"
-          }
-        },
-        "required": [
-          "investedAmount",
-          "periodInMonths",
-          "totalProfit",
-          "totalAmount",
-          "profitability"
-        ]
-      },
       "CdbSimulateDto": {
         "type": "object",
         "properties": {
@@ -472,155 +248,6 @@
           "cdi"
         ]
       },
-      "ProductSimulateDto": {
-        "type": "object",
-        "properties": {
-          "amount": {
-            "type": "number",
-            "description": "Valor do investimento",
-            "example": 1000
-          },
-          "months": {
-            "type": "number",
-            "description": "Meses de investimento",
-            "example": 12
-          },
-          "productId": {
-            "type": "number",
-            "description": "Código do Produto de Investimento cadastrado pela Comunidade",
-            "example": 1,
-            "default": 1
-          }
-        },
-        "required": [
-          "amount",
-          "months",
-          "productId"
-        ]
-      },
-      "CreateInvestmentResultDto": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "Tipo da aplicação",
-            "examples": [
-              "LCA",
-              "LCI",
-              "CDB"
-            ]
-          },
-          "issuer": {
-            "type": "string",
-            "description": "Emissor",
-            "example": "Banco Itaú"
-          },
-          "originBank": {
-            "type": "string",
-            "description": "Banco que disponibiliza o investimento",
-            "example": "Itaú"
-          },
-          "minimumApplication": {
-            "type": "number",
-            "description": "Aplicação Mínima",
-            "example": 100
-          },
-          "maturity": {
-            "type": "string",
-            "description": "Vencimento",
-            "example": "2025-12-31",
-            "format": "date"
-          },
-          "profitability": {
-            "type": "number",
-            "description": "Rentabilidade",
-            "example": 100
-          },
-          "profitabilityType": {
-            "type": "string",
-            "description": "Rentabilidade do",
-            "example": "CDI",
-            "default": "CDI"
-          },
-          "id": {
-            "type": "number",
-            "description": "ID"
-          },
-          "daysUntilMaturity": {
-            "type": "number",
-            "description": "Dias até o vencimento a partir da data atual",
-            "example": 100
-          },
-          "monthsUntilMaturity": {
-            "type": "number",
-            "description": "Meses até o vencimento a partir da data atual",
-            "example": 100
-          }
-        },
-        "required": [
-          "originBank",
-          "minimumApplication",
-          "maturity",
-          "profitability",
-          "profitabilityType",
-          "id",
-          "daysUntilMaturity",
-          "monthsUntilMaturity"
-        ]
-      },
-      "CreateInvestmentDto": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "Tipo da aplicação",
-            "examples": [
-              "LCA",
-              "LCI",
-              "CDB"
-            ]
-          },
-          "issuer": {
-            "type": "string",
-            "description": "Emissor",
-            "example": "Banco Itaú"
-          },
-          "originBank": {
-            "type": "string",
-            "description": "Banco que disponibiliza o investimento",
-            "example": "Itaú"
-          },
-          "minimumApplication": {
-            "type": "number",
-            "description": "Aplicação Mínima",
-            "example": 100
-          },
-          "maturity": {
-            "type": "string",
-            "description": "Vencimento",
-            "example": "2025-12-31",
-            "format": "date"
-          },
-          "profitability": {
-            "type": "number",
-            "description": "Rentabilidade",
-            "example": 100
-          },
-          "profitabilityType": {
-            "type": "string",
-            "description": "Rentabilidade do",
-            "example": "CDI",
-            "default": "CDI"
-          }
-        },
-        "required": [
-          "originBank",
-          "minimumApplication",
-          "maturity",
-          "profitability",
-          "profitabilityType"
-        ]
-      },
       "DetailedValues": {
         "type": "object",
         "properties": {
@@ -641,14 +268,6 @@
       "Fees": {
         "type": "object",
         "properties": {
-          "tr": {
-            "description": "Taxa Referencial (a.m.) %",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DetailedValues"
-              }
-            ]
-          },
           "ipca": {
             "description": "IPCA (a.a.) %",
             "allOf": [
@@ -673,14 +292,6 @@
               }
             ]
           },
-          "poupanca": {
-            "description": "Rentabilidade da Poupança (a.m.) %",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DetailedValues"
-              }
-            ]
-          },
           "usd": {
             "description": "Dólar comercial",
             "allOf": [
@@ -699,11 +310,9 @@
           }
         },
         "required": [
-          "tr",
           "ipca",
           "cdi",
           "selic",
-          "poupanca",
           "usd",
           "rentabilidadeCdb",
           "rentabilidadeLcx"
