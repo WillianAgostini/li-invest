@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import moment from 'moment';
-import { convertToBr } from 'src/utils/conveter';
+import { convertToBr } from 'src/utils/converter';
 import { FinancialRate, RateType } from '../entities/financial-rate';
 
 @Injectable()
@@ -62,7 +62,7 @@ export class FeeService {
     }
   }
 
-  async getDolar(): Promise<FinancialRate | undefined> {
+  async getDollar(): Promise<FinancialRate | undefined> {
     let attempts = 0;
     const maxAttempts = 3;
     let today = moment().add(1, 'day').format('MM-DD-YYYY');

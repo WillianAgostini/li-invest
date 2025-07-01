@@ -2,13 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class DetailedValues {
   @ApiProperty({
-    description: 'Valor em %',
+    description: 'Value (%)',
     type: Number,
   })
   value: number;
 
   @ApiProperty({
-    description: 'Data de atualização',
+    description: 'Update date',
     type: String,
   })
   updatedAt: string;
@@ -16,38 +16,38 @@ export class DetailedValues {
 
 export class Fees {
   @ApiProperty({
-    description: 'IPCA (a.a.) %',
+    description: 'IPCA (YoY) %',
     type: DetailedValues,
   })
   ipca: DetailedValues;
 
   @ApiProperty({
-    description: 'CDI (a.a.) %',
+    description: 'CDI (YoY) %',
     type: DetailedValues,
   })
   cdi: DetailedValues;
 
   @ApiProperty({
-    description: 'SELIC (a.a.) %',
+    description: 'SELIC (YoY) %',
     type: DetailedValues,
   })
   selic: DetailedValues;
 
   @ApiProperty({
-    description: 'Dólar comercial',
+    description: 'US Dollar',
     type: DetailedValues,
   })
   usd: DetailedValues;
 
   @ApiProperty({
-    description: 'CDB/RDB percentual CDI',
+    description: 'CDB/RDB percent of CDI',
     type: Number,
   })
-  rentabilidadeCdb: number = 100;
+  cdbProfitability: number = 100;
 
   @ApiProperty({
-    description: 'LCI/LCA percentual CDI',
+    description: 'LCI/LCA percent of CDI',
     type: Number,
   })
-  rentabilidadeLcx: number = 100;
+  lcxProfitability: number = 100;
 }
