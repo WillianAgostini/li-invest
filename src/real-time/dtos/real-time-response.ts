@@ -3,13 +3,13 @@ import { Fees } from 'src/simulation/interface/fees';
 
 export class RealTimeResponse {
   @ApiProperty({
-    description: 'Conjunto de taxas e índices financeiros',
+    description: 'Set of financial rates',
     type: Fees,
   })
   fees: Fees;
 
   @ApiProperty({
-    description: 'Data atual',
+    description: 'Current date',
     type: String,
     example: '18/06/2024',
   })

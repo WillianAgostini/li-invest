@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CdbSimulateDto } from 'src/simulation/dto/simulate-dto';
-import { getDurationInDays } from 'src/utils/conveter';
+import { getDurationInDays } from 'src/utils/converter';
 import { getCDBResult } from '../core/cdb';
 import { getLcxResult } from '../core/lcx';
 import { RateType } from '../entities/financial-rate';
@@ -26,7 +26,7 @@ export class FinanceService {
 
   async cdbSimulate(dto: CdbSimulateDto): Promise<CdbSimulateResult> {
     const fees = await this.getCurrentFees();
-    const cdb = getCDBResult(dto.amount, fees.cdi.value, dto.cdiProfiability || fees.rentabilidadeCdb, getDurationInDays(dto.months));
+    const cdb = getCDBResult(dto.amount, fees.cdi.value, dto.cdiProfitability || fees.cdbProfitability, getDurationInDays(dto.months));
     return {
       investedAmount: dto.amount,
       periodInMonths: dto.months,
@@ -36,7 +36,7 @@ export class FinanceService {
 
   async lcxSimulate(dto: CdbSimulateDto): Promise<LcxSimulateResult> {
     const fees = await this.getCurrentFees();
-    const lcx = getLcxResult(dto.amount, fees.cdi.value, dto.cdiProfiability || fees.rentabilidadeLcx, getDurationInDays(dto.months));
+    const lcx = getLcxResult(dto.amount, fees.cdi.value, dto.cdiProfitability || fees.lcxProfitability, getDurationInDays(dto.months));
     return {
       investedAmount: dto.amount,
       periodInMonths: dto.months,
@@ -46,14 +46,14 @@ export class FinanceService {
 
   async getCurrentFees() {
     const fees = {
-      rentabilidadeCdb: parseFloat(process.env.RENTABILIDADE_CDB) || 100,
-      rentabilidadeLcx: parseFloat(process.env.RENTABILIDADE_LCX) || 100,
+      cdbProfitability: parseFloat(process.env.CDB_PROFITABILITY) || 100,
+      lcxProfitability: parseFloat(process.env.LCX_PROFITABILITY) || 100,
     } as Fees;
     const operations = {
       cdi: () => this.feeService.getSelicOver(),
       ipca: () => this.feeService.getIpca(),
       selic: () => this.feeService.getSelicMeta(),
-      usd: () => this.feeService.getDolar(),
+      usd: () => this.feeService.getDollar(),
     };
 
     for (const rateType of Object.values(RateType)) {

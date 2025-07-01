@@ -2,25 +2,25 @@ import { ApiProperty } from '@nestjs/swagger';
 
 class SimulateResult {
   @ApiProperty({
-    description: 'Valor Investido',
+    description: 'Invested amount',
     type: Number,
   })
   investedAmount: number;
 
   @ApiProperty({
-    description: 'Meses de investimento',
+    description: 'Investment months',
     type: Number,
   })
   periodInMonths: number;
 
   @ApiProperty({
-    description: 'Rendimento Líquido',
+    description: 'Net yield',
     type: Number,
   })
   totalProfit: number;
 
   @ApiProperty({
-    description: 'Valor Total Líquido',
+    description: 'Net total value',
     type: Number,
   })
   totalAmount: number;
@@ -28,32 +28,31 @@ class SimulateResult {
 
 export class CdbSimulateResult extends SimulateResult {
   @ApiProperty({
-    description: 'Valor total IOF',
+    description: 'Total IOF tax',
     type: Number,
   })
   taxAmount: number;
 
   @ApiProperty({
-    description: 'Taxa IOF',
+    description: 'IOF rate',
     type: Number,
   })
   taxPercentage: number;
 
   @ApiProperty({
-    description: 'Imposto de Renda',
+    description: 'Income tax',
     type: Number,
   })
   iofAmount: number;
 
   @ApiProperty({
-    description: 'CDI (a.a.) %',
+    description: 'CDI (YoY) %',
     type: Number,
   })
   cdi: number;
 
   @ApiProperty({
-    description: 'CDB/RDB percentual CDI',
-
+    description: 'CDB/RDB percent of CDI',
     type: Number,
   })
   profitability: number;
@@ -61,13 +60,13 @@ export class CdbSimulateResult extends SimulateResult {
 
 export class LcxSimulateResult extends SimulateResult {
   @ApiProperty({
-    description: 'LCI/LCA percentual CDI',
+    description: 'LCI/LCA percent of CDI',
     type: Number,
   })
   profitability: number;
 
   @ApiProperty({
-    description: 'CDI (a.a.) %',
+    description: 'CDI (YoY) %',
     type: Number,
   })
   cdi: number;
