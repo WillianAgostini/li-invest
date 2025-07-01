@@ -7,7 +7,7 @@ import { RealTimeResponse } from '../dtos/real-time-response';
 @Controller('realTime')
 @ApiTags('realTime')
 export class RealTimeController {
-  constructor(private simulationService: SimulationService) {}
+  constructor(private simulationService: SimulationService) { }
 
   @Get()
   @ApiResponse({ status: 200, type: RealTimeResponse })

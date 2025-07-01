@@ -26,14 +26,6 @@ class SimulateResult {
   totalAmount: number;
 }
 
-export class PoupancaSimulateResult extends SimulateResult {
-  @ApiProperty({
-    description: 'Rentabilidade da Poupança (a.m.) %',
-    type: Number,
-  })
-  profitability: number;
-}
-
 export class CdbSimulateResult extends SimulateResult {
   @ApiProperty({
     description: 'Valor total IOF',

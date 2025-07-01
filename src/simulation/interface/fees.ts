@@ -16,12 +16,6 @@ export class DetailedValues {
 
 export class Fees {
   @ApiProperty({
-    description: 'Taxa Referencial (a.m.) %',
-    type: DetailedValues,
-  })
-  tr: DetailedValues;
-
-  @ApiProperty({
     description: 'IPCA (a.a.) %',
     type: DetailedValues,
   })
@@ -38,12 +32,6 @@ export class Fees {
     type: DetailedValues,
   })
   selic: DetailedValues;
-
-  @ApiProperty({
-    description: 'Rentabilidade da Poupança (a.m.) %',
-    type: DetailedValues,
-  })
-  poupanca: DetailedValues;
 
   @ApiProperty({
     description: 'Dólar comercial',

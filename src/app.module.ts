@@ -1,16 +1,17 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSourceOrmModule } from './data-source-orm.module';
-import { Investment } from './investment/entities/investment';
-import { InvestmentModule } from './investment/investment.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { RealTimeModule } from './real-time/real-time.module';
 import { RegulationsModule } from './regulations/regulations.module';
-import { FinancialRate } from './simulation/entities/financial-rate';
 import { SimulationModule } from './simulation/simulation.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
-  imports: [DataSourceOrmModule, TypeOrmModule.forFeature([FinancialRate, Investment]), SimulationModule, RegulationsModule, RealTimeModule, InvestmentModule],
+  imports: [
+    CacheModule.register({ isGlobal: true }),
+    SimulationModule,
+    RegulationsModule,
+    RealTimeModule,
+  ],
   controllers: [],
   providers: [],
 })
